@@ -2,4 +2,4 @@
  * @module preload
  */
 
-export { print } from "./print";
+export { print, printTest, convertToRupiah } from "./print";
