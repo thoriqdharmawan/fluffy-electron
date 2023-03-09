@@ -1,9 +1,35 @@
-import { Image, Printer } from "@node-escpos/core";
+import { /* Image, */ Printer } from "@node-escpos/core";
 import USB from "@node-escpos/usb-adapter";
 
-import imgSrc from './tux.png?url'
+// import imgSrc from './tux.png?url'
 
-export async function print(text: string) {
+const idrFormatter = new Intl.NumberFormat('id-ID', {
+  style: 'currency',
+  currency: 'IDR',
+  minimumFractionDigits: 0,
+});
+
+export function convertToRupiah(nominal: number) {
+  return idrFormatter.format(nominal);
+}
+
+interface ProductsSales {
+  name: string,
+  qty: number,
+  price: number
+}
+
+interface DataTransaction {
+  merchant_name: string,
+  location: string
+  date: string,
+  total_amount: number,
+  total_payment: number,
+  products_sales: ProductsSales[]
+}
+
+
+export async function print(data_transaction: DataTransaction) {
   const device = new USB();
   await new Promise<void>((resolve, reject) => {
     device.open(async function (err) {
@@ -12,43 +38,91 @@ export async function print(text: string) {
         return
       }
 
-      let printer = new Printer(device, {});
+      let printer = new Printer(device, { width: 58 });
 
-      const image = await Image.load(imgSrc);
+      const divider = () => {
+        printer
+          .font("a")
+          .align("ct")
+          .style("bu")
+          .size(1, 1)
+          .text("")
+          .text("================================")
+          .text("")
+      }
 
-      // printer
-      //   .font("a")
-      //   .align("ct")
-      //   .style("bu")
-      //   .size(1, 1)
-      //   .text("The quick brown fox jumps over the lazy dog")
-      //   // .text("敏捷的棕色狐狸跳过懒狗")
-      //   // .barcode(112233445566, "EAN13", { width: 50, height: 50 })
-      //   .table(["One", "Two", "Three"])
-      //   .tableCustom(
-      //     [
-      //       { text: "Left", align: "LEFT", width: 0.33, style: "B" },
-      //       { text: "Center", align: "CENTER", width: 0.33 },
-      //       { text: "Right", align: "RIGHT", width: 0.33 },
-      //     ],
-      //     { encoding: "cp857", size: [1, 1] }, // Optional
-      //   )
+      const header = (name: string, address: string, date: string) => {
+        printer
+          .font("a")
+          .align("ct")
+          .style("bu")
+          .size(1, 1)
+          .marginBottom(5)
+          .text(name)
+          .text(address)
+          .text(date)
+          .text("================================")
+          .text("")
+      }
 
-      // // inject qrimage to printer
-      // // printer = await printer.qrimage("https://github.com/node-escpos/driver")
-      // // inject image to printer
-      // // printer = await printer.image(image, "s8")
+      const products = (name: string, qty: number, price: number) => {
+        printer
+          .font("a")
+          .align("lt")
+          .style("bu")
+          .size(1, 1)
+          .text(name)
+          .text(`${qty} @${convertToRupiah(price)}`)
+        printer
+          .font("a")
+          .align("RT")
+          .style("bu")
+          .size(1, 1)
+          .text(`${convertToRupiah(price * qty)}`)
+      }
 
-      // printer
-      //   .cut()
-      //   .close()
-      //   .finally(resolve)
-      printer
-        .font("a")
-        .align("ct")
-        .style("bu")
-        .size(1, 1)
-        .text(text)
+      const summary = (label: string, value: number = 0) => {
+        printer
+          .font("a")
+          .align("lt")
+          .style("B")
+          .size(1, 1)
+          .text(`${label}: `)
+        printer
+          .font("a")
+          .align("RT")
+          .style("B")
+          .size(1, 1)
+          .text(`${convertToRupiah(value)}`)
+      }
+
+      const footer = (label: string = "Terima Kasih Telah Berbelanja") => {
+        printer
+          .font("a")
+          .align("lt")
+          .style("bu")
+          .size(1, 1)
+          .text(label)
+      }
+
+      // const image = await Image.load(imgSrc);
+
+      const { merchant_name, location, date, products_sales, total_amount, total_payment } = data_transaction
+      const offset = total_payment - (total_amount || 0)
+
+      header(merchant_name, location, date)
+
+      products_sales.forEach((p) => {
+        products(p.name, p.qty, p.price)
+      })
+
+      divider()
+      summary("Total Tagihan", total_amount)
+      summary("Dibayar", total_payment)
+      summary(offset > 0 ? "Kembali" : "Kurang", offset)
+      divider()
+      footer()
+
       printer
         .cut()
         .close()
@@ -57,6 +131,27 @@ export async function print(text: string) {
   });
 }
 
-export function testLogger(text: string) {
-  console.log(text)
+export async function printTest() {
+  const device = new USB();
+  await new Promise<void>((resolve, reject) => {
+    device.open(async function (err) {
+      if (err) {
+        reject(err);
+        return
+      }
+
+      let printer = new Printer(device, { width: 58 });
+
+      printer
+        .font("a")
+        .align("lt")
+        .style("bu")
+        .size(1, 1)
+        .text("Printer Berjalan Dengan Baik")
+      printer
+        .cut()
+        .close()
+        .finally(resolve)
+    });
+  });
 }
