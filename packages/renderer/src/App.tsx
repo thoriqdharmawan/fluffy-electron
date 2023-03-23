@@ -6,13 +6,14 @@ import { convertToRupiah, print, printTest } from "#preload";
 import client from "./apollo-client";
 
 export const GET_LIST_TRANSACTIONS = gql`
-  query GetListTransactions($limit: Int, $offset: Int) {
-    total: transactions_aggregate {
+  query GetListTransactions($companyId: uuid!, $limit: Int, $offset: Int) {
+    total: transactions_aggregate(where: { companyId: { _eq: $companyId } }) {
       aggregate {
         count
       }
     }
     transactions(
+      where: { companyId: { _eq: $companyId } }
       limit: $limit
       offset: $offset
       order_by: { created_at: desc }
@@ -61,6 +62,7 @@ export default function App() {
     variables: {
       limit: 4,
       offset: 0,
+      companyId: "40b0a565-40d5-49d7-8fd6-30e0adc1a684"
     }
   })
 
