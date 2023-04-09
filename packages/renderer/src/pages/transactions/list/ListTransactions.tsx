@@ -12,6 +12,7 @@ import client from '/@/apollo-client';
 import Loading from '/@/components/loading/Loading';
 import { Empty } from '/@/components/empty-state';
 import { useUser } from '/@/context/user';
+// import { useState } from 'react';
 
 interface TableOrderHistoriesProps {
   onClick: (id: string) => void;
@@ -21,6 +22,7 @@ const LIMIT = 10;
 
 const ListTransactions = ({ onClick }: TableOrderHistoriesProps) => {
   const { companyId } = useUser();
+  // const [filter, setFilter] = useState<string>('')
 
   const pagination = usePagination({ total: 10, initialPage: 1 });
 
@@ -66,6 +68,15 @@ const ListTransactions = ({ onClick }: TableOrderHistoriesProps) => {
       <Title order={4} mb="md">
         Total Transaksi: {data?.total.aggregate.count}
       </Title>
+      {/* <Chip.Group onChange={(v: string) => setFilter(v)} mb="sm">
+        <Group position="center">
+          <Chip defaultChecked value="1">Hari ini</Chip>
+          <Chip value="2">30 Hari Terakhir</Chip>
+          <Chip value="3">1 Bulan Terakhir</Chip>
+          <Chip value="4">Semua Transaksi</Chip>
+        </Group>
+      </Chip.Group> */}
+
       <Paper shadow="sm" p="md" withBorder w="100%">
         <Table verticalSpacing="xs" striped>
           <thead>

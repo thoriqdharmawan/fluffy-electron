@@ -5,7 +5,7 @@ import Skeleton from 'react-loading-skeleton';
 
 import { GET_DETAIL_TRANSACTION } from '/@/graphql/query';
 import { convertToRupiah } from '/@/context/helpers';
-import { GLOBAL_FORMAT_DATE, TRANSACTION_STATUS } from '/@/context/global';
+import { GLOBAL_FORMAT_DATE, TRANSACTION_METHOD, TRANSACTION_STATUS, TRANSACTION_TYPE } from '/@/context/global';
 import client from '/@/apollo-client';
 // import TransactionId from '/@/components/cards/TransactionId';
 import PrintIcon from '/@/components/print/PrintIcon';
@@ -66,7 +66,7 @@ export default function DetailTransaction(props: Props) {
             <List label="Nomor Transaksi" value={code || '-'} />
             <List label="Kasir" value={employee?.name} />
             <List label="Waktu Transaksi" value={dayjs(created_at).format(GLOBAL_FORMAT_DATE)} />
-            <List label="Metode Pembayaran" value={`${payment_type} - ${payment_method}`} />
+            <List label="Metode Pembayaran" value={`${TRANSACTION_TYPE[payment_type]} - ${TRANSACTION_METHOD[payment_method]}`} />
             <List label="Status" value={TRANSACTION_STATUS[status]} />
           </SimpleGrid>
 
