@@ -9,10 +9,14 @@ import { UserProvider } from './context/user'
 import ROUTER from './routes';
 import AuthStateChangeProvider from '/@/context/Auth';
 import { NotificationsProvider } from '@mantine/notifications';
+import dayjs from 'dayjs';
+import 'dayjs/locale/id'
+import localizedFormat from 'dayjs/plugin/localizedFormat';
 
 export default function AppContainer() {
   const [colorScheme, setColorScheme] = useState<ColorScheme>('dark');
 
+  dayjs.extend(localizedFormat).locale('id');
   const toggleColorScheme = (value?: ColorScheme) => {
     const nextColorScheme = value || (colorScheme === 'dark' ? 'light' : 'dark');
     setColorScheme(nextColorScheme);

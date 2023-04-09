@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { gql, useQuery } from '@apollo/client';
 import { Box, Button, Table, TextInput } from '@mantine/core'
-
+import dayjs from 'dayjs'
 import { convertToRupiah, print, printTest } from "#preload";
 
 import client from '/@/apollo-client';
 import MainLayout from '/@/layouts/MainLayout';
+import { GLOBAL_FORMAT_DATE } from '/@/context/global';
 
 
 export const GET_LIST_TRANSACTIONS = gql`
@@ -85,7 +86,7 @@ export default function PrintPage() {
     const data_transaction = {
       merchant_name: "Arion Mart",
       location: "Tritih Wetan, Cilacap",
-      date: created_at,
+      date: dayjs(created_at).format(GLOBAL_FORMAT_DATE),
       total_amount: total_amount,
       total_payment: payment_amount,
       products_sales: products_solds?.map((ps: any) => ({

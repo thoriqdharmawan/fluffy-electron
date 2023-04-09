@@ -1,18 +1,10 @@
 
 import { createBrowserRouter } from "react-router-dom";
-import MainLayout from "/@/layouts/MainLayout";
-
 import PrintPage from "/@/pages/print";
 import Homepage from "/@/pages/homepage/Homepage";
 import Login from "/@/pages/login";
+import Transactions from "/@/pages/transactions/Transactions";
 
-function Transaction() {
-  return (
-    <MainLayout>
-      <h1>Transaction Page</h1>
-    </MainLayout>
-  );
-}
 
 const ROUTER = createBrowserRouter([
   {
@@ -25,7 +17,7 @@ const ROUTER = createBrowserRouter([
   },
   {
     path: "/transactions",
-    element: <Transaction />
+    element: <Transactions />
   },
   {
     path: "/print",

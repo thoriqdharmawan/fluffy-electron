@@ -1,5 +1,5 @@
 import { Navbar as Nav, Stack, Tooltip, UnstyledButton, createStyles } from '@mantine/core';
-import { IconHome2, IconShoppingCart, IconPrinter } from '@tabler/icons';
+import { IconHome2, IconHistory, IconPrinter } from '@tabler/icons';
 import { Link, useLocation } from 'react-router-dom';
 import { ColorSchemeToggle } from '../color-scheme-toggle';
 import { UserLogin } from '../user-login';
@@ -29,7 +29,7 @@ const useStyles = createStyles((theme) => ({
 
 const data = [
   { icon: IconHome2, label: 'Home Page', href: '/' },
-  { icon: IconShoppingCart, label: 'Riwayat Transaksi', href: '/transactions' },
+  { icon: IconHistory, label: 'Riwayat Transaksi', href: '/transactions' },
   { icon: IconPrinter, label: 'Cetak Stuk', href: '/print' },
   // { icon: IconList, label: 'Daftar Produk', href: '/products' },
   // { icon: IconCash, label: 'Pendapatan', href: '/incomes' },
