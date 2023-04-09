@@ -4,8 +4,7 @@ import { InitialUserState, useUser } from './user'
 import { Authentication } from '/@/authentication/index'
 
 const AuthStateChangeProvider = ({ children }: { children: React.ReactNode }) => {
-  const user = useUser()
-  const { SetUser }: any = user
+  const { SetUser } = useUser()
 
   const InitiateAuthStateChange = () => {
     Authentication().onAuthStateChanged((user) => {

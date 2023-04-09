@@ -8,6 +8,7 @@ import { CartProvider } from 'react-use-cart';
 import { UserProvider } from './context/user'
 import ROUTER from './routes';
 import AuthStateChangeProvider from '/@/context/Auth';
+import { NotificationsProvider } from '@mantine/notifications';
 
 export default function AppContainer() {
   const [colorScheme, setColorScheme] = useState<ColorScheme>('dark');
@@ -21,15 +22,17 @@ export default function AppContainer() {
     <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
       <SkeletonTheme baseColor={colorScheme === 'dark' ? "#25262b" : '#ebebeb'} highlightColor={colorScheme === 'dark' ? "#1A1B1E" : '#f5f5f5'}>
         <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>
-          <ModalsProvider>
-            <UserProvider>
-              <CartProvider>
+          <NotificationsProvider>
+            <ModalsProvider>
+              <UserProvider>
                 <AuthStateChangeProvider>
-                  <RouterProvider router={ROUTER} />
+                  <CartProvider>
+                    <RouterProvider router={ROUTER} />
+                  </CartProvider>
                 </AuthStateChangeProvider>
-              </CartProvider>
-            </UserProvider>
-          </ModalsProvider>
+              </UserProvider>
+            </ModalsProvider>
+          </NotificationsProvider>
         </MantineProvider>
       </SkeletonTheme>
     </ColorSchemeProvider>
