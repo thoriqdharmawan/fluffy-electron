@@ -3,7 +3,8 @@ import { UseFormReturnType } from '@mantine/form';
 
 import { FormValues } from '../DetailModal';
 import { convertToRupiah } from '/@/context/helpers';
-import TransactionId from '/@/components/cards/TransactionId';
+// import TransactionId from '/@/components/cards/TransactionId';
+import PrintIcon from '/@/components/print/PrintIcon';
 
 interface Props {
   form: UseFormReturnType<FormValues>;
@@ -40,7 +41,7 @@ export default function CompletePayment(props: Props) {
           <tr>
             <td>Dibayar</td>
             <td>
-              <Text ta="right">{convertToRupiah(form.values.paymentAmount)}</Text>
+              <Text ta="right">{convertToRupiah(form.values.paymentAmount || 0)}</Text>
             </td>
           </tr>
           {offset > 0 && (
@@ -65,7 +66,7 @@ export default function CompletePayment(props: Props) {
           )}
         </tbody>
       </Table>
-      <TransactionId transactionId={transactionId} />
+      <PrintIcon transactionId={transactionId} />
     </Center>
   );
 }

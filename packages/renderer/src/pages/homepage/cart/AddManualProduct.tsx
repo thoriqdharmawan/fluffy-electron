@@ -19,7 +19,6 @@ interface FormValues {
 export default function AddManualProduct(props: Props) {
   const { addItem } = useCart();
   const { opened, onClose } = props
-
   const form = useForm<FormValues>({
     initialValues: {
       name: '',
@@ -30,7 +29,7 @@ export default function AddManualProduct(props: Props) {
     validate: {
       name: isNotEmpty("Bagian ini diperlukan"),
       price: isNotEmpty("Bagian ini diperlukan"),
-      quantity: isInRange({min: 1}, "Bagian ini diperlukan"),
+      quantity: isInRange({ min: 1 }, "Bagian ini diperlukan"),
     }
   })
 
@@ -69,11 +68,13 @@ export default function AddManualProduct(props: Props) {
   return (
     <Modal opened={opened} onClose={handleClose}>
       <TextInput
+        // ref={focusTrapRef}
         mb="md"
         withAsterisk
         label="Nama Produk"
         placeholder="Masukan Nama Produk"
         labelProps={{ mb: 8 }}
+        data-autofocus
         {...form.getInputProps('name')}
       />
 

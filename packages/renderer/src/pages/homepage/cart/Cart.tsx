@@ -62,7 +62,7 @@ export default function Cart(props: Props) {
                 id={item.id}
                 quantity={quantity || 0}
                 name={item.name}
-                src={item.src}
+                // src={item.src}
                 price={convertToRupiah(actualPrice)}
                 subtotal={convertToRupiah(actualPrice * quantity)}
                 variants={variant}

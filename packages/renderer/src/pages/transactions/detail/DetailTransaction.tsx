@@ -7,7 +7,8 @@ import { GET_DETAIL_TRANSACTION } from '/@/graphql/query';
 import { convertToRupiah } from '/@/context/helpers';
 import { GLOBAL_FORMAT_DATE, TRANSACTION_STATUS } from '/@/context/global';
 import client from '/@/apollo-client';
-import TransactionId from '/@/components/cards/TransactionId';
+// import TransactionId from '/@/components/cards/TransactionId';
+import PrintIcon from '/@/components/print/PrintIcon';
 
 interface Props {
   id: string;
@@ -150,7 +151,8 @@ export default function DetailTransaction(props: Props) {
           </Table>
         </>
       )}
-      <TransactionId transactionId={transactionId} />
+      <PrintIcon transactionId={transactionId} />
+      {/* <TransactionId transactionId={transactionId} /> */}
     </Modal>
   );
 }
