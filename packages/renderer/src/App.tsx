@@ -1,10 +1,13 @@
+import 'react-loading-skeleton/dist/skeleton.css'
 import { useState } from 'react'
-
+import { SkeletonTheme } from 'react-loading-skeleton';
 import { RouterProvider } from 'react-router-dom'
 import { MantineProvider, ColorScheme, ColorSchemeProvider } from '@mantine/core';
 import { ModalsProvider } from '@mantine/modals';
-
+import { CartProvider } from 'react-use-cart';
+import { UserProvider } from './context/user'
 import ROUTER from './routes';
+import AuthStateChangeProvider from '/@/context/Auth';
 
 export default function AppContainer() {
   const [colorScheme, setColorScheme] = useState<ColorScheme>('dark');
@@ -16,11 +19,19 @@ export default function AppContainer() {
 
   return (
     <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
-      <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>
-        <ModalsProvider>
-          <RouterProvider router={ROUTER} />
-        </ModalsProvider>
-      </MantineProvider>
+      <SkeletonTheme baseColor={colorScheme === 'dark' ? "#25262b" : '#ebebeb'} highlightColor={colorScheme === 'dark' ? "#1A1B1E" : '#f5f5f5'}>
+        <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>
+          <ModalsProvider>
+            <UserProvider>
+              <CartProvider>
+                <AuthStateChangeProvider>
+                  <RouterProvider router={ROUTER} />
+                </AuthStateChangeProvider>
+              </CartProvider>
+            </UserProvider>
+          </ModalsProvider>
+        </MantineProvider>
+      </SkeletonTheme>
     </ColorSchemeProvider>
   )
 }

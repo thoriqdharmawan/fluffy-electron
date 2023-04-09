@@ -2,6 +2,7 @@ import { Navbar as Nav, Stack, Tooltip, UnstyledButton, createStyles } from '@ma
 import { IconHome2, IconShoppingCart, IconPrinter } from '@tabler/icons';
 import { Link, useLocation } from 'react-router-dom';
 import { ColorSchemeToggle } from '../color-scheme-toggle';
+import { UserLogin } from '../user-login';
 
 const useStyles = createStyles((theme) => ({
   link: {
@@ -62,8 +63,9 @@ export default function Navbar() {
           {menus}
         </Stack>
       </Nav.Section>
-      <Nav.Section>
+      <Nav.Section sx={{display: 'flex', gap: 12, flexDirection: 'column'}}>
         <ColorSchemeToggle />
+        <UserLogin />
       </Nav.Section>
     </Nav>
   );

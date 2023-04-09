@@ -1,16 +1,11 @@
 
-import { createHashRouter } from "react-router-dom";
-import MainLayout from "../layouts/MainLayout";
+import { createBrowserRouter } from "react-router-dom";
+import MainLayout from "/@/layouts/MainLayout";
 
-import PrintPage from "../pages/print";
+import PrintPage from "/@/pages/print";
+import Homepage from "/@/pages/homepage/Homepage";
+import Login from "/@/pages/login";
 
-function Root() {
-  return (
-    <MainLayout>
-      <h1>Hello 232</h1>
-    </MainLayout>
-  );
-}
 function Transaction() {
   return (
     <MainLayout>
@@ -19,10 +14,14 @@ function Transaction() {
   );
 }
 
-const ROUTER = createHashRouter([
+const ROUTER = createBrowserRouter([
   {
     path: "/",
-    element: <Root />
+    element: <Homepage />
+  },
+  {
+    path: "/login",
+    element: <Login />
   },
   {
     path: "/transactions",
