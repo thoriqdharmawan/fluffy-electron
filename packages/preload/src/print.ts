@@ -124,6 +124,8 @@ export async function print(data_transaction: DataTransaction) {
       footer()
 
       printer
+        .cashdraw(2)
+        .cashdraw(5)
         .cut()
         .close()
         .finally(resolve)

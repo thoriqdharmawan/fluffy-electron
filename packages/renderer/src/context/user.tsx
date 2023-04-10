@@ -4,11 +4,13 @@ import client from '/@/apollo-client'
 
 export interface InitialUser {
   uid?: string;
-  email?: string;
+  email?: string | null;
   displayName?: string;
-  photoURL?: string;
+  photoURL?: string | null;
   companyId?: string;
   emailVerified: boolean;
+  SetUser?: (value: InitialUser) => void;
+  ResetUser?: () => void;
 }
 export const InitialUserState: InitialUser = {
   uid: undefined,

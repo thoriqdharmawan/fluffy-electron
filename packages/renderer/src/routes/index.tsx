@@ -1,18 +1,11 @@
 
+import React from 'react'
 import { createBrowserRouter } from "react-router-dom";
-import MainLayout from "/@/layouts/MainLayout";
 
-import PrintPage from "/@/pages/print";
-import Homepage from "/@/pages/homepage/Homepage";
-import Login from "/@/pages/login";
-
-function Transaction() {
-  return (
-    <MainLayout>
-      <h1>Transaction Page</h1>
-    </MainLayout>
-  );
-}
+const Homepage = React.lazy(() => import("/@/pages/homepage/Homepage"))
+const Transactions = React.lazy(() => import("/@/pages/transactions/Transactions"))
+const Login = React.lazy(() => import("/@/pages/login"))
+const PrintPage = React.lazy(() => import("/@/pages/print"))
 
 const ROUTER = createBrowserRouter([
   {
@@ -25,7 +18,7 @@ const ROUTER = createBrowserRouter([
   },
   {
     path: "/transactions",
-    element: <Transaction />
+    element: <Transactions />
   },
   {
     path: "/print",
