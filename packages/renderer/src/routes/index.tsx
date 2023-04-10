@@ -1,10 +1,11 @@
 
+import React from 'react'
 import { createBrowserRouter } from "react-router-dom";
-import PrintPage from "/@/pages/print";
-import Homepage from "/@/pages/homepage/Homepage";
-import Login from "/@/pages/login";
-import Transactions from "/@/pages/transactions/Transactions";
 
+const Homepage = React.lazy(() => import("/@/pages/homepage/Homepage"))
+const Transactions = React.lazy(() => import("/@/pages/transactions/Transactions"))
+const Login = React.lazy(() => import("/@/pages/login"))
+const PrintPage = React.lazy(() => import("/@/pages/print"))
 
 const ROUTER = createBrowserRouter([
   {

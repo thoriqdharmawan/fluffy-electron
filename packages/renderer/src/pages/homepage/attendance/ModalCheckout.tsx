@@ -3,8 +3,8 @@ import { Button, Modal, NumberInput, TextInput, Text } from '@mantine/core';
 import { isNotEmpty, useForm } from '@mantine/form';
 import { useMutation } from '@apollo/client';
 
-import { DONE_WORK } from '../../../services/attendace';
-import client from '../../../apollo-client';
+import { DONE_WORK } from '/@/graphql/mutation';
+import client from '/@/apollo-client';
 
 interface Props {
   opened: boolean;

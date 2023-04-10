@@ -26,7 +26,9 @@ export function UserLogin() {
 
   const handleLogout = async () => {
     await SignOut();
-    user.ResetUser();
+    if (user.ResetUser) {
+      user.ResetUser();
+    }
     navigate('/login');
   };
 
@@ -46,7 +48,7 @@ export function UserLogin() {
             })}
           >
             <Avatar src={user.photoURL} alt={user.displayName} radius="xl" size={32}>
-              {getInitials(user.displayName, user.photoURL)}
+              {getInitials(user.displayName || '', user.photoURL || '')}
             </Avatar>
           </ActionIcon>
         </Menu.Target>

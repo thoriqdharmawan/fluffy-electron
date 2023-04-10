@@ -23,6 +23,6 @@
     "src/**/*.tsx",
     "types/**/*.d.ts",
     "../../types/**/*.d.ts"
-, "src/context/user.jsx"  ],
+  ],
   "exclude": ["**/*.spec.ts", "**/*.test.ts"]
 }

@@ -1,8 +1,10 @@
+import React from 'react'
 import 'react-loading-skeleton/dist/skeleton.css'
+import localizedFormat from 'dayjs/plugin/localizedFormat';
 import { useState } from 'react'
 import { SkeletonTheme } from 'react-loading-skeleton';
 import { RouterProvider } from 'react-router-dom'
-import { MantineProvider, ColorScheme, ColorSchemeProvider } from '@mantine/core';
+import { MantineProvider, ColorScheme, ColorSchemeProvider, Loader, Center } from '@mantine/core';
 import { ModalsProvider } from '@mantine/modals';
 import { CartProvider } from 'react-use-cart';
 import { UserProvider } from './context/user'
@@ -11,7 +13,22 @@ import AuthStateChangeProvider from '/@/context/Auth';
 import { NotificationsProvider } from '@mantine/notifications';
 import dayjs from 'dayjs';
 import 'dayjs/locale/id'
-import localizedFormat from 'dayjs/plugin/localizedFormat';
+
+const SuspenseWrapper = () => {
+  return (
+    <React.Suspense
+      fallback={
+        <Center h="100vh">
+          <Loader />
+        </Center>
+      }
+    >
+      <RouterProvider router={ROUTER} />
+    </React.Suspense>
+  )
+}
+
+const MemoizedAppRouter = React.memo(SuspenseWrapper)
 
 export default function AppContainer() {
   const [colorScheme, setColorScheme] = useState<ColorScheme>('dark');
@@ -31,7 +48,7 @@ export default function AppContainer() {
               <UserProvider>
                 <AuthStateChangeProvider>
                   <CartProvider>
-                    <RouterProvider router={ROUTER} />
+                    <MemoizedAppRouter />
                   </CartProvider>
                 </AuthStateChangeProvider>
               </UserProvider>
