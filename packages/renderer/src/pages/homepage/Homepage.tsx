@@ -12,8 +12,6 @@ import DetailModal from './order-details/DetailModal';
 import CheckIn from '/@/components/check-in/CheckIn';
 import { useUser } from '/@/context/user';
 
-import MainLayout from "/@/layouts/MainLayout";
-
 export default function Homepage() {
 
   const [attendance, setAttendance] = useState();
@@ -64,7 +62,7 @@ export default function Homepage() {
 
 
   return (
-    <MainLayout>
+    <>
       <Flex justify="space-between" w="100%" direction={{ base: 'column', md: 'row' }}>
         {working ? (
           <>
@@ -92,6 +90,6 @@ export default function Homepage() {
         transactionNumber={transacitonNumber}
         attendance={attendance}
       />
-    </MainLayout>
+    </>
   )
 }
