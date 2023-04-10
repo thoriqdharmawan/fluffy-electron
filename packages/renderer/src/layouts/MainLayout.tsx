@@ -1,9 +1,9 @@
-import React from 'react';
 import { AppShell, useMantineTheme } from '@mantine/core';
+import { Outlet } from 'react-router-dom'
 
-import Navbar from '../components/navbar';
+import Navbar from '/@/components/navbar';
 
-export default function MainLayout({ children }: { children: React.ReactNode }) {
+export default function MainLayout() {
   const theme = useMantineTheme();
 
   return (
@@ -20,7 +20,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
       navbar={<Navbar />}
       padding={0}
     >
-      {children}
+      <Outlet />
     </AppShell>
   );
 }

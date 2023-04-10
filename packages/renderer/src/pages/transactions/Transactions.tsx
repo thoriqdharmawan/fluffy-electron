@@ -3,7 +3,6 @@ import { Box } from '@mantine/core';
 
 import ListTransactions from './list/ListTransactions';
 
-import MainLayout from '/@/layouts/MainLayout';
 import HeaderSection from '/@/components/header/HeaderSection';
 import DetailTransaction from './detail/DetailTransaction';
 
@@ -14,7 +13,7 @@ export default function Transactions() {
   });
 
   return (
-    <MainLayout>
+    <>
       <Box p="lg" w="100%">
         <HeaderSection
           title="Riwayat Transaksi"
@@ -29,6 +28,6 @@ export default function Transactions() {
         opened={modal.open}
         onClose={() => setModal({ open: false, id: '' })}
       />
-    </MainLayout>
+    </>
   );
 }

@@ -5,7 +5,6 @@ import dayjs from 'dayjs'
 import { convertToRupiah, print, printTest } from "#preload";
 
 import client from '/@/apollo-client';
-import MainLayout from '/@/layouts/MainLayout';
 import { GLOBAL_FORMAT_DATE } from '/@/context/global';
 import { GET_TRANSACTIONS_BY_ID } from '/@/graphql/query'
 
@@ -42,7 +41,7 @@ export default function PrintPage() {
   }
 
   return (
-    <MainLayout>
+    <>
       <Box ta="center" w="100%" p="xl">
         <Button onClick={() => printTest()}>Test Printer</Button>
 
@@ -88,6 +87,6 @@ export default function PrintPage() {
           <Button style={{ marginTop: 24 }} onClick={handlePrint}>CETAK STRUK</Button>
         )}
       </Box>
-    </MainLayout>
+    </>
   )
 }

@@ -1,28 +1,35 @@
 
 import React from 'react'
-import { createBrowserRouter } from "react-router-dom";
+import { createHashRouter } from "react-router-dom";
+import MainLayout from '../layouts/MainLayout';
 
 const Homepage = React.lazy(() => import("/@/pages/homepage/Homepage"))
 const Transactions = React.lazy(() => import("/@/pages/transactions/Transactions"))
 const Login = React.lazy(() => import("/@/pages/login"))
 const PrintPage = React.lazy(() => import("/@/pages/print"))
 
-const ROUTER = createBrowserRouter([
+const ROUTER = createHashRouter([
   {
     path: "/",
-    element: <Homepage />
+    element: <MainLayout />,
+    children: [
+      {
+        path: '',
+        element: <Homepage />,
+      },
+      {
+        path: 'transactions',
+        element: <Transactions />,
+      },
+      {
+        path: 'print',
+        element: <PrintPage />,
+      },
+    ]
   },
   {
     path: "/login",
-    element: <Login />
-  },
-  {
-    path: "/transactions",
-    element: <Transactions />
-  },
-  {
-    path: "/print",
-    element: <PrintPage />
+    element: <Login />,
   },
 ]);
 
