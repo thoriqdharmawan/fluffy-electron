@@ -35,10 +35,10 @@ export default function ModalCheckout(props: Props) {
     },
   });
 
-  const handleClose = () => {
-    onDoneWork();
-    onClose();
+  const handleClose = async () => {
     form.reset();
+    await onDoneWork();
+    onClose();
   };
 
   const handleSubmit = () => {
@@ -50,6 +50,7 @@ export default function ModalCheckout(props: Props) {
         variables: {
           id: attendanceId,
           money_in_drawer_end: form.values.money_in_drawer_end,
+          note_end: form.values.note_end,
         },
       })
         .then(() => {

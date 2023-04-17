@@ -1,30 +1,64 @@
+import { useEffect, useMemo, useState } from 'react';
 import { Table, Paper, Pagination, Group, Badge, ActionIcon, Title } from '@mantine/core';
 import { IconEye } from '@tabler/icons';
 import { useQuery } from '@apollo/client';
-import { usePagination } from '@mantine/hooks';
 import dayjs from 'dayjs';
 
 import { GET_LIST_TRANSACTIONS } from '/@/graphql/query';
 import { convertToRupiah } from '/@/context/helpers';
-import { GLOBAL_FORMAT_DATE, TRANSACTION_STATUS } from '/@/context/global';
+import { GLOBAL_FORMAT_DATE, TRANSACTION_STATUS, VARIABLES_DATE } from '/@/context/global';
 
-import client from '/@/apollo-client';
-import Loading from '/@/components/loading/Loading';
 import { Empty } from '/@/components/empty-state';
 import { useUser } from '/@/context/user';
-// import { useState } from 'react';
+import client from '/@/apollo-client';
+import Loading from '/@/components/loading/Loading';
+import Chips from '/@/components/chips/Chips';
 
 interface TableOrderHistoriesProps {
   onClick: (id: string) => void;
+}
+
+const getVariableDate = (variant: string = 'NOW') => {
+  return VARIABLES_DATE[variant]
 }
 
 const LIMIT = 10;
 
 const ListTransactions = ({ onClick }: TableOrderHistoriesProps) => {
   const { companyId } = useUser();
-  // const [filter, setFilter] = useState<string>('')
+  const [filter, setFilter] = useState<string>('NOW')
 
-  const pagination = usePagination({ total: 10, initialPage: 1 });
+  const [page, setPage] = useState<number>(1)
+
+  const chips = useMemo(() => [
+    {
+      label: 'Hari ini',
+      value: 'NOW',
+      checked: filter === 'NOW',
+    },
+    {
+      label: 'Kemarin',
+      value: 'YESTERDAY',
+      checked: filter === 'YESTERDAY',
+    },
+    {
+      label: 'Bulan ini',
+      value: 'THISMONTH',
+      checked: filter === 'THISMONTH',
+    },
+    {
+      label: '30 Hari kebelakang',
+      value: 'LAST30DAYS',
+      checked: filter === 'LAST30DAYS',
+    },
+    {
+      label: 'Semua',
+      value: 'ALL',
+      checked: filter === 'ALL',
+    },
+  ], [filter])
+
+  const date = useMemo(() => getVariableDate(filter), [filter])
 
   const { data, loading, error } = useQuery(GET_LIST_TRANSACTIONS, {
     client: client,
@@ -32,12 +66,16 @@ const ListTransactions = ({ onClick }: TableOrderHistoriesProps) => {
     fetchPolicy: 'cache-and-network',
     variables: {
       limit: LIMIT,
-      offset: (pagination.active - 1) * LIMIT,
+      offset: (page - 1) * LIMIT,
       where: {
         companyId: companyId ? { _eq: companyId } : undefined,
+        created_at: !!date.startdate && date.enddate ? { _gte: date.startdate, _lt: date.enddate } : undefined
       },
     },
   });
+
+
+  useEffect(() => setPage(1), [filter])
 
   if (error) {
     console.error(error);
@@ -65,17 +103,12 @@ const ListTransactions = ({ onClick }: TableOrderHistoriesProps) => {
 
   return (
     <>
+      <Chips data={chips} onChange={setFilter} />
+
       <Title order={4} mb="md">
         Total Transaksi: {data?.total.aggregate.count}
       </Title>
-      {/* <Chip.Group onChange={(v: string) => setFilter(v)} mb="sm">
-        <Group position="center">
-          <Chip defaultChecked value="1">Hari ini</Chip>
-          <Chip value="2">30 Hari Terakhir</Chip>
-          <Chip value="3">1 Bulan Terakhir</Chip>
-          <Chip value="4">Semua Transaksi</Chip>
-        </Group>
-      </Chip.Group> */}
+
 
       <Paper shadow="sm" p="md" withBorder w="100%">
         <Table verticalSpacing="xs" striped>
@@ -98,7 +131,7 @@ const ListTransactions = ({ onClick }: TableOrderHistoriesProps) => {
           />
         )}
         <Group mt={24} mb={12}>
-          <Pagination ml="auto" total={totalPage} onChange={pagination.setPage} />
+          <Pagination ml="auto" page={page} total={totalPage} onChange={setPage} />
         </Group>
       </Paper>
     </>

@@ -7,7 +7,6 @@ import { GET_DETAIL_TRANSACTION } from '/@/graphql/query';
 import { convertToRupiah } from '/@/context/helpers';
 import { GLOBAL_FORMAT_DATE, TRANSACTION_METHOD, TRANSACTION_STATUS, TRANSACTION_TYPE } from '/@/context/global';
 import client from '/@/apollo-client';
-// import TransactionId from '/@/components/cards/TransactionId';
 import PrintIcon from '/@/components/print/PrintIcon';
 
 interface Props {
@@ -60,7 +59,7 @@ export default function DetailTransaction(props: Props) {
   return (
     <Modal size={640} opened={opened} onClose={onClose} title="Detail Transaksi">
       {loading && <Skeleton count={5} height="36px" width="100%" />}
-      {!loading && (
+      {!loading && opened && (
         <>
           <SimpleGrid mb="xl" cols={2}>
             <List label="Nomor Transaksi" value={code || '-'} />
@@ -149,10 +148,9 @@ export default function DetailTransaction(props: Props) {
               )}
             </tbody>
           </Table>
+          <PrintIcon transactionId={transactionId} />
         </>
       )}
-      <PrintIcon transactionId={transactionId} />
-      {/* <TransactionId transactionId={transactionId} /> */}
     </Modal>
   );
 }

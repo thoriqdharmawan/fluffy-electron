@@ -30,6 +30,8 @@ const useStyles = createStyles((theme) => ({
 const data = [
   { icon: IconHome2, label: 'Home Page', href: '/' },
   { icon: IconHistory, label: 'Riwayat Transaksi', href: '/transactions' },
+  // { icon: IconAlarm, label: 'Kehadiran', href: '/attendances' },
+  // { icon: IconWallet, label: 'Dompet', href: '/wallets' },
   { icon: IconPrinter, label: 'Cetak Stuk', href: '/print' },
   // { icon: IconList, label: 'Daftar Produk', href: '/products' },
   // { icon: IconCash, label: 'Pendapatan', href: '/incomes' },

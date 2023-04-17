@@ -21,10 +21,10 @@ export const START_WORK = gql`
 `;
 
 export const DONE_WORK = gql`
-  mutation DoneWork($id: uuid!, $money_in_drawer_end: numeric!) {
+  mutation DoneWork($id: uuid!, $money_in_drawer_end: numeric!, $note_end: String) {
     update_attendances(
       where: { id: { _eq: $id } }
-      _set: { money_in_drawer_end: $money_in_drawer_end, updated_at: "now()" }
+      _set: { money_in_drawer_end: $money_in_drawer_end, updated_at: "now()", note_end: $note_end }
     ) {
       affected_rows
     }
