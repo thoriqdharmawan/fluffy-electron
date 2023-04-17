@@ -13,6 +13,7 @@ import AuthStateChangeProvider from '/@/context/Auth';
 import { NotificationsProvider } from '@mantine/notifications';
 import dayjs from 'dayjs';
 import 'dayjs/locale/id'
+import utc from 'dayjs/plugin/utc'
 
 const SuspenseWrapper = () => {
   return (
@@ -33,6 +34,7 @@ const MemoizedAppRouter = React.memo(SuspenseWrapper)
 export default function AppContainer() {
   const [colorScheme, setColorScheme] = useState<ColorScheme>('dark');
 
+  dayjs.extend(utc)
   dayjs.extend(localizedFormat).locale('id');
   const toggleColorScheme = (value?: ColorScheme) => {
     const nextColorScheme = value || (colorScheme === 'dark' ? 'light' : 'dark');

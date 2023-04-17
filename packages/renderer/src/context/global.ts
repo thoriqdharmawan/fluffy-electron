@@ -24,24 +24,29 @@ interface VariablesDate {
   }
 }
 
-const Now = dayjs(new Date())
-const FormatDate = 'YYYY-MM-DD'
+const NowStart = dayjs(new Date().setHours(0, 0, 0)).subtract(7, 'hours')
+const NowEnd = dayjs(new Date().setHours(23, 59, 59)).subtract(7, 'hours')
+const FormatDate = 'YYYY-MM-DDTHH:mm:ss'
 
 export const VARIABLES_DATE: VariablesDate = {
   'NOW': {
-    startdate: Now.format(FormatDate),
-    enddate: Now.add(1, 'day').format(FormatDate)
+    startdate: NowStart.format(FormatDate),
+    enddate: NowEnd.format(FormatDate)
   },
   'YESTERDAY': {
-    startdate: Now.subtract(1, 'day').format(FormatDate),
-    enddate: Now.format(FormatDate)
+    startdate: NowStart.subtract(1, 'day').format(FormatDate),
+    enddate: NowEnd.subtract(1, 'day').format(FormatDate)
   },
   'THISMONTH': {
-    startdate: Now.startOf('month').format(FormatDate),
-    enddate: Now.endOf('month').format(FormatDate)
+    startdate: NowEnd.startOf('month').format(FormatDate),
+    enddate: NowEnd.endOf('month').format(FormatDate)
   },
   'LAST30DAYS': {
-    startdate: Now.subtract(30, 'days').format(FormatDate),
-    enddate: Now.format(FormatDate)
+    startdate: NowStart.subtract(30, 'days').format(FormatDate),
+    enddate: NowEnd.format(FormatDate)
+  },
+  'ALL': {
+    startdate: '',
+    enddate: ''
   },
 }
