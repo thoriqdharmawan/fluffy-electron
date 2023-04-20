@@ -1,9 +1,10 @@
-import { createContext, useContext, useState, useEffect } from 'react'
+import { createContext, useContext, useState } from 'react'
 import { GET_LIST_USER_LOGIN } from '/@/graphql/query'
+import { useQuery } from '@apollo/client';
 import client from '/@/apollo-client'
 
 export interface InitialUser {
-  uid?: string;
+  uid?: string | undefined;
   email?: string | null;
   displayName?: string;
   photoURL?: string | null;
@@ -23,37 +24,27 @@ export const InitialUserState: InitialUser = {
 
 const UserContext = createContext(InitialUserState)
 
-const getDataUser = async (uid: string) => {
-  const { data } = await client.query({
-    query: GET_LIST_USER_LOGIN,
-    variables: {
-      uid
-    }
-  })
-
-  return data
-}
-
 export const useUser = () => {
   return useContext(UserContext)
 }
 
 export const UserProvider = (props: any) => {
   const [userState, setUserState] = useState<InitialUser>(InitialUserState)
-
-  useEffect(() => {
-    if (userState.uid) {
-      getDataUser(userState.uid).then(({ users }) => {
-        setUserState((prev) => ({
-          ...prev,
-          displayName: users?.[0].name,
-          companyId: users?.[0].companyId
-        }))
-      })
+  
+  useQuery(GET_LIST_USER_LOGIN, {
+    client: client,
+    skip: !userState.uid,
+    fetchPolicy: 'cache-and-network',
+    variables: {uid: userState.uid},
+    onCompleted: ({users}) => {
+      setUserState((prev) => ({
+        ...prev,
+        displayName: users?.[0].name,
+        companyId: users?.[0].companyId
+      }))
     }
-  }, [userState.uid])
-
-
+  })
+  
   const SetUser = (userCredential: InitialUser) => {
     setUserState({ ...userCredential })
   }

@@ -4,11 +4,11 @@ import {
   MantineTheme,
   ActionIcon,
 } from '@mantine/core';
+import { useNavigate } from 'react-router-dom';
 
 import { IconLogout } from '@tabler/icons';
 import { SignOut } from '/@/authentication';
 import { useUser } from '/@/context/user';
-import { useNavigate } from 'react-router-dom';
 
 const getInitials = (str: string, photoURL: string) => {
   if (photoURL) {

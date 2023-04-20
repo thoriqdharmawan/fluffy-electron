@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Box, Flex } from '@mantine/core';
+import { Box, Center, Flex } from '@mantine/core';
 import { useQuery } from '@apollo/client';
 import dayjs from 'dayjs';
 
@@ -11,11 +11,13 @@ import Cart from './cart/Cart';
 import DetailModal from './order-details/DetailModal';
 import CheckIn from '/@/components/check-in/CheckIn';
 import { useUser } from '/@/context/user';
+import LoginButton from '/@/components/login/LoginButton';
 
 export default function Homepage() {
 
   const [attendance, setAttendance] = useState();
-  const { companyId } = useUser();
+  const user = useUser();
+  const { companyId } = user
   const [working, setWorking] = useState(true);
 
   const [detail, setDetail] = useState({
@@ -59,6 +61,16 @@ export default function Homepage() {
     setWorking(false);
     refetchAttendance();
   };
+
+
+
+  if (!companyId) {
+    return (
+      <Center w="100%">
+        <LoginButton />
+      </Center>
+    )
+  }
 
 
   return (

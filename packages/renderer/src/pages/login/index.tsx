@@ -1,8 +1,8 @@
 import { TextInput, Button, Group, Box, Text } from '@mantine/core';
-import { useForm } from '@mantine/form';
-import { SignIn } from '/@/authentication';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { useForm } from '@mantine/form';
+import { SignIn } from '/@/authentication';
 
 type formLoginType = {
   email: string;
@@ -14,8 +14,8 @@ export default function index() {
   const [error, setError] = useState<string>('')
   const form = useForm({
     initialValues: {
-      email: '',
-      password: '',
+      email: 'arion@arion.com',
+      password: 'arionjaya123',
     },
 
     validate: {
