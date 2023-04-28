@@ -64,4 +64,25 @@ const getPrices = (max: number | undefined, min: number | undefined) => {
   return prices;
 };
 
-export { getInitials, convertToRupiah, getVariants, getNominals, getPrices };
+const simplifyFraction = (numerator: number = 0, denominator: number = 0) => {
+  // Find the greatest common divisor using Euclid's algorithm
+  const gcd: any = (a: number, b: number) => b === 0 ? a : gcd(b, a % b);
+  const commonDivisor = gcd(numerator, denominator);
+
+  // Divide the numerator and denominator by the common divisor
+  const simplifiedNumerator = numerator / commonDivisor;
+  const simplifiedDenominator = denominator / commonDivisor;
+
+  // Return the simplified fraction as an array [numerator, denominator]
+  return [simplifiedNumerator, simplifiedDenominator];
+}
+
+
+export { 
+  getInitials, 
+  convertToRupiah, 
+  getVariants, 
+  getNominals, 
+  getPrices, 
+  simplifyFraction 
+};

@@ -8,6 +8,7 @@ const Transactions = React.lazy(() => import("/@/pages/transactions/Transactions
 const Attendances = React.lazy(() => import("/@/pages/attendances"))
 const Wallets = React.lazy(() => import("/@/pages/wallets"))
 const Login = React.lazy(() => import("/@/pages/login"))
+const ProductsPage = React.lazy(() => import("/@/pages/products"))
 const PrintPage = React.lazy(() => import("/@/pages/print"))
 
 const ROUTER = createHashRouter([
@@ -34,6 +35,10 @@ const ROUTER = createHashRouter([
       {
         path: 'print',
         element: <PrintPage />,
+      },
+      {
+        path: 'products',
+        element: <ProductsPage />,
       },
     ]
   },
