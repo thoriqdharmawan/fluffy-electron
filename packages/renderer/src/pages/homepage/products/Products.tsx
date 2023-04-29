@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { Text, Flex, Box, Grid, ScrollArea, ActionIcon, Menu, Button, Center } from '@mantine/core';
-import { useDebouncedValue } from '@mantine/hooks';
+import { Text, Flex, Box, Grid, ScrollArea, ActionIcon, Menu, Button, Center, TextInput } from '@mantine/core';
+import { useDebouncedValue, useFocusWithin } from '@mantine/hooks';
 import { useQuery } from '@apollo/client';
-import { IconChevronDown, IconCircleCheck } from '@tabler/icons';
+import { IconChevronDown, IconCircleCheck, IconScan } from '@tabler/icons';
 
 import { Empty } from '/@/components/empty-state';
-import { GET_LIST_PRODUCTS_MENUS } from '/@/graphql/query';
+import { GET_LIST_PRODUCTS_MENUS, GET_SCANNED_VARIANT } from '/@/graphql/query';
 import { getPrices } from '/@/context/helpers';
 import { useUser } from '/@/context/user';
 
@@ -16,6 +16,7 @@ import ProductCardV2 from '/@/components/cards/ProductCardV2';
 import DetailProduct from './detail/DetailProduct';
 import Loading from '/@/components/loading/Loading';
 import ModalCheckout from './ModalCheckout';
+import { useCart } from 'react-use-cart';
 
 interface Props {
   employeeId: string;
@@ -55,16 +56,41 @@ const EMPTY_SEARCH = {
 
 const Products = (props: Props) => {
   const { attendanceId, employeeName, onDoneWork } = props;
+  const { addItem } = useCart();
   const { companyId } = useUser();
+  const { ref, focused } = useFocusWithin();
 
   const [openCheckout, setOpenCheckout] = useState<boolean>(false);
+  const [barcodeValue, setBarcodeValue] = useState('')
   const [search, setSearch] = useState('');
+  const [debounce] = useDebouncedValue(search, 500);
   const [loadingData, setLoadingData] = useState<boolean>(false)
   const [detail, setDetail] = useState({
     open: false,
     id: '',
   });
-  const [debounce] = useDebouncedValue(search, 500);
+
+  useQuery(GET_SCANNED_VARIANT, {
+    client,
+    skip: !focused || !barcodeValue,
+    fetchPolicy: 'network-only',
+    variables: { sku: barcodeValue },
+    onCompleted: async ({ product_variants }) => {
+      if (!!product_variants?.[0]) {
+
+        const pure = JSON.parse(JSON.stringify(product_variants[0]), (key, value) => {
+          return key === '__typename' ? undefined : value;
+        });
+
+        const { id, name, image, variants, type } = pure.product_variants_product
+
+        await addItem({ ...pure, productId: id, name, src: image, variants, type }, 1);
+      }
+
+      await setBarcodeValue('')
+    }
+  })
+
 
   const { data, loading, fetchMore } = useQuery(GET_LIST_PRODUCTS_MENUS, {
     client: client,
@@ -77,6 +103,7 @@ const Products = (props: Props) => {
         _and: {
           company: { id: { _eq: companyId } },
           _or: debounce ? [
+            { product_variants: { sku: { _eq: search } } },
             { description: { _ilike: `%${debounce}%` } },
             { name: { _ilike: `%${debounce}%` } },
           ] : undefined,
@@ -106,6 +133,10 @@ const Products = (props: Props) => {
     });
   };
 
+  window.document?.getElementById("focusButton")?.addEventListener("click", () => {
+    window.document?.getElementById("myTextField")?.focus();
+  });
+
   return (
     <>
       <ScrollArea
@@ -119,7 +150,7 @@ const Products = (props: Props) => {
             background: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0],
           })}
         >
-          <Flex gap="lg" w="100%" p="lg" pos="sticky" top={0} justify="space-between" align="center" sx={(theme) => ({ zIndex: 1, background: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0], })}>
+          <Flex gap="lg" w="100%" p="lg" pos="sticky" top={0} align="center" sx={(theme) => ({ zIndex: 1, background: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0], })}>
             <Flex justify="space-between" align="center" gap="sm">
               <Menu shadow="md" width={200}>
                 <Text sx={{ whiteSpace: 'pre' }} variant="gradient" size="md" fw="bold">
@@ -141,6 +172,27 @@ const Products = (props: Props) => {
               </Menu>
             </Flex>
             <SearchBar onChange={(e) => setSearch(e.target.value)} placeholder="Cari Produk" />
+
+            <ActionIcon
+              size="xl"
+              color="blue"
+              ref={ref}
+              id="focusButton"
+              variant={focused ? "filled" : "default"}
+            >
+              <TextInput
+                sx={{zIndex: -1, position: 'absolute'}}
+                mt="sm"
+                placeholder="First input"
+                value={barcodeValue}
+                id="myTextField"
+                opacity={0}
+                onChange={(e) => setBarcodeValue(e.target.value)}
+              />
+              <IconScan size="2.125rem" />
+
+
+            </ActionIcon>
           </Flex>
           <Grid px="lg">
             {!loading &&
