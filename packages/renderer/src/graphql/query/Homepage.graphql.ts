@@ -75,8 +75,14 @@ export const GET_LIST_PRODUCTS_MENUS = gql`
 `;
 
 export const GET_SCANNED_VARIANT = gql`
-  query GetScannedVariant($sku: String = "") {
-    product_variants(where: {sku: {_eq: $sku}}, limit: 1) {
+  query GetScannedVariant($sku: String = "", $companyId: uuid!) {
+    product_variants(
+      where: {
+        sku: { _eq: $sku }
+        product_variants_product: { companyId: { _eq: $companyId } }
+      }
+      limit: 1
+    ) {
       id
       coord
       is_primary

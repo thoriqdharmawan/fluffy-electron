@@ -73,9 +73,9 @@ const Products = (props: Props) => {
 
   useQuery(GET_SCANNED_VARIANT, {
     client,
-    skip: !focused || !barcodeValue,
+    skip: !focused || !barcodeValue || !companyId,
     fetchPolicy: 'network-only',
-    variables: { sku: barcodeValue },
+    variables: { sku: barcodeValue, companyId },
     onCompleted: async ({ product_variants }) => {
       if (!!product_variants?.[0]) {
         if (product_variants?.[0].stock === 0) {
