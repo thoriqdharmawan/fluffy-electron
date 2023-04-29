@@ -16,25 +16,38 @@ import Header from "./Header";
 
 const LIMIT = 5;
 
+const EMPTY_PRODUCT = {
+  title: 'Tidak Ada Produk',
+  label: 'Belum ada produk yang ditambahkan ke dalam sistem',
+};
+
+const EMPTY_SEARCH = {
+  title: 'Produk Tidak Ditemukan',
+  label:
+    'Maaf, produk yang Anda cari tidak ditemukan. Silakan periksa kembali kata kunci pencarian Anda atau cobalah kata kunci lain.',
+};
+
+
 export default function index() {
   const { companyId } = useUser();
 
   const [page, setPage] = useState<number>(1)
-  const [searchRaw, setSearch] = useState<string>('')
-  const [search] = useDebouncedValue(searchRaw, 1000);
+  const [search, setSearch] = useState<string>('')
+  const [debounce] = useDebouncedValue(search, 1000);
 
   const { data, loading, error } = useQuery(GET_LIST_PRODUCTS, {
     client: client,
     skip: !companyId,
+    fetchPolicy: 'cache-and-network',
     variables: {
       limit: LIMIT,
       offset: (page - 1) * LIMIT,
       where: {
         _and: {
           company: { id: { _eq: companyId } },
-          _or: search ? [
-            { product_variants: { sku: { _eq: search } } },
-            { name: { _ilike: `%${search}%` } },
+          _or: debounce ? [
+            { product_variants: { sku: { _eq: debounce } } },
+            { name: { _ilike: `%${debounce}%` } },
           ] : undefined,
         }
       },
@@ -57,12 +70,7 @@ export default function index() {
         label="Anda dapat melihat daftar produk yang telah Anda tambahkan ke dalam aplikasi kami. Anda dapat mengedit atau menghapus produk yang ada sesuai kebutuhan."
       />
 
-      <SearchBar
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        mb="24px"
-        placeholder="Cari Produk"
-      />
+      <SearchBar onChange={(e) => setSearch(e.target.value)} placeholder="Cari Produk" mb="24px" />
 
       <Paper shadow="md" radius="md" p="md" mx="auto" mt="xl">
         <Header />
@@ -72,8 +80,8 @@ export default function index() {
           {loadingData && <Loading height={120} />}
           {!loadingData && data?.total.aggregate.count === 0 && (
             <Empty
-              title="Tidak Ada Produk"
-              label="Belum ada produk yang ditambahkan ke dalam sistem."
+              title={debounce ? EMPTY_SEARCH.title : EMPTY_PRODUCT.title}
+              label={debounce ? EMPTY_SEARCH.label : EMPTY_PRODUCT.label}
             />
           )}
 
@@ -95,8 +103,6 @@ export default function index() {
         <Group mt={24} mb={12}>
           <Pagination m="auto" page={page} total={totalPage} onChange={setPage} />
         </Group>
-
-
       </Paper>
     </Box>
   )
