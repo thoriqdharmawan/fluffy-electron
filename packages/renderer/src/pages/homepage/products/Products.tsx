@@ -2,7 +2,9 @@ import { useState } from 'react';
 import { Text, Flex, Box, Grid, ScrollArea, ActionIcon, Menu, Button, Center, TextInput } from '@mantine/core';
 import { useDebouncedValue, useFocusWithin } from '@mantine/hooks';
 import { useQuery } from '@apollo/client';
-import { IconChevronDown, IconCircleCheck, IconScan } from '@tabler/icons';
+import { IconChevronDown, IconCircleCheck, IconExclamationMark, IconScan } from '@tabler/icons';
+import { showNotification } from '@mantine/notifications';
+import { useCart } from 'react-use-cart';
 
 import { Empty } from '/@/components/empty-state';
 import { GET_LIST_PRODUCTS_MENUS, GET_SCANNED_VARIANT } from '/@/graphql/query';
@@ -16,7 +18,6 @@ import ProductCardV2 from '/@/components/cards/ProductCardV2';
 import DetailProduct from './detail/DetailProduct';
 import Loading from '/@/components/loading/Loading';
 import ModalCheckout from './ModalCheckout';
-import { useCart } from 'react-use-cart';
 
 interface Props {
   employeeId: string;
@@ -77,14 +78,29 @@ const Products = (props: Props) => {
     variables: { sku: barcodeValue },
     onCompleted: async ({ product_variants }) => {
       if (!!product_variants?.[0]) {
+        if (product_variants?.[0].stock === 0) {
+          showNotification({
+            title: 'Stok Produk Habis',
+            message: 'Pastikan produk mempunyai stok yang tersedia',
+            icon: <IconExclamationMark />,
+            color: 'red',
+          });
+        } else {
+          const pure = JSON.parse(JSON.stringify(product_variants[0]), (key, value) => {
+            return key === '__typename' ? undefined : value;
+          });
 
-        const pure = JSON.parse(JSON.stringify(product_variants[0]), (key, value) => {
-          return key === '__typename' ? undefined : value;
+          const { id, name, image, variants, type } = pure.product_variants_product
+
+          await addItem({ ...pure, productId: id, name, src: image, variants, type }, 1);
+        }
+      } else {
+        showNotification({
+          title: 'Produk Tidak Terdaftar',
+          message: 'Pastikan produk telah terdaftar pada aplikasi',
+          icon: <IconExclamationMark />,
+          color: 'red',
         });
-
-        const { id, name, image, variants, type } = pure.product_variants_product
-
-        await addItem({ ...pure, productId: id, name, src: image, variants, type }, 1);
       }
 
       await setBarcodeValue('')
@@ -182,7 +198,7 @@ const Products = (props: Props) => {
               variant={focused ? "filled" : "default"}
             >
               <TextInput
-                sx={{zIndex: -1, position: 'absolute'}}
+                sx={{ zIndex: -1, position: 'absolute' }}
                 mt="sm"
                 placeholder="First input"
                 value={barcodeValue}
