@@ -176,6 +176,7 @@ const Products = (props: Props) => {
             <ActionIcon
               size="xl"
               color="blue"
+              radius="md"
               ref={ref}
               id="focusButton"
               variant={focused ? "filled" : "default"}
@@ -190,8 +191,6 @@ const Products = (props: Props) => {
                 onChange={(e) => setBarcodeValue(e.target.value)}
               />
               <IconScan size="2.125rem" />
-
-
             </ActionIcon>
           </Flex>
           <Grid px="lg">

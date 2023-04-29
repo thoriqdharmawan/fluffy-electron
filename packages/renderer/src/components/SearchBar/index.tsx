@@ -5,7 +5,7 @@ const SearchBar = (props: TextInputProps) => {
   return (
     <TextInput
       icon={<IconSearch size={18} stroke={1.5} />}
-      radius="xl"
+      radius="md"
       size="md"
       w="100%"
       rightSectionWidth={42}
