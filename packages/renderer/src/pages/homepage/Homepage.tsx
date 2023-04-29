@@ -1,23 +1,21 @@
 import { useState } from 'react';
 import { Box, Center, Flex } from '@mantine/core';
 import { useQuery } from '@apollo/client';
-import dayjs from 'dayjs';
 
 import { GET_TOTAL_TRANSACTIONS_TODAY, GET_ACTIVE_ATTENDACE } from '/@/graphql/query'
-import client from '/@/apollo-client';
-
-import Products from './products/Products';
-import Cart from './cart/Cart';
-import DetailModal from './order-details/DetailModal';
-import CheckIn from '/@/components/check-in/CheckIn';
+import { NowEnd, NowStart } from '/@/context/global';
 import { useUser } from '/@/context/user';
+import client from '/@/apollo-client';
+import CheckIn from '/@/components/check-in/CheckIn';
 import LoginButton from '/@/components/login/LoginButton';
 
-export default function Homepage() {
+import Cart from './cart/Cart';
+import Products from './products/Products';
+import DetailModal from './order-details/DetailModal';
 
+export default function Homepage() {
+  const { companyId } = useUser();
   const [attendance, setAttendance] = useState();
-  const user = useUser();
-  const { companyId } = user
   const [working, setWorking] = useState(true);
 
   const [detail, setDetail] = useState({
@@ -37,9 +35,11 @@ export default function Homepage() {
 
   const { data, refetch } = useQuery(GET_TOTAL_TRANSACTIONS_TODAY, {
     client: client,
+    skip: !companyId,
     variables: {
-      gte: dayjs().format('YYYY-MM-DD'),
-      lte: dayjs().add(1, 'day').format('YYYY-MM-DD'),
+      companyId,
+      gte: NowStart,
+      lte: NowEnd,
     },
   });
 
@@ -62,8 +62,6 @@ export default function Homepage() {
     refetchAttendance();
   };
 
-
-
   if (!companyId) {
     return (
       <Center w="100%">
@@ -71,7 +69,6 @@ export default function Homepage() {
       </Center>
     )
   }
-
 
   return (
     <>

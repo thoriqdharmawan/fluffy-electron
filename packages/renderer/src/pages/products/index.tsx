@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { Box, Group, Pagination, Paper } from "@mantine/core";
+import { useQuery } from "@apollo/client";
+import { useDebouncedValue } from "@mantine/hooks";
 
 import { GET_LIST_PRODUCTS } from "/@/graphql/query";
 import { Empty } from "/@/components/empty-state";
-import { useQuery } from "@apollo/client";
 import { useUser } from "/@/context/user";
 import HeaderSection from "/@/components/header/HeaderSection";
 import Loading from "/@/components/loading/Loading";
@@ -19,7 +20,8 @@ export default function index() {
   const { companyId } = useUser();
 
   const [page, setPage] = useState<number>(1)
-  const [search, setSearch] = useState<string>('')
+  const [searchRaw, setSearch] = useState<string>('')
+  const [search] = useDebouncedValue(searchRaw, 1000);
 
   const { data, loading, error } = useQuery(GET_LIST_PRODUCTS, {
     client: client,

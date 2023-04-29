@@ -1,12 +1,12 @@
 import { useMemo } from 'react';
-import { Box, Flex, Title, Text, Badge, ActionIcon, Paper } from '@mantine/core';
+import { Box, Flex, Title, Text, Badge, ActionIcon, Paper, Image } from '@mantine/core';
 import { IconPlus, IconMinus, IconTrash } from '@tabler/icons';
 import { useCart } from 'react-use-cart';
 
 type Props = {
   id: string;
   name: string;
-  // src: string;
+  src: string;
   price: string;
   subtotal: string;
   quantity: number;
@@ -19,7 +19,7 @@ type Props = {
 export default function ProductItemCart({
   id,
   quantity,
-  // src,
+  src,
   name,
   price,
   subtotal,
@@ -38,7 +38,7 @@ export default function ProductItemCart({
   return (
     <Paper px="md" py="sm" mb="md" h="auto" shadow="sm" radius="md">
       <Flex justify="start" mb="sm">
-        {/* <Image radius="sm" src={src} withPlaceholder width={60} height={60} mr="sm" /> */}
+        <Image radius="sm" src={src} withPlaceholder width={60} height={60} mr="sm" />
         <Box w="100%">
           <Title order={5} mb="xs">{name}</Title>
           <Flex justify='space-between'>

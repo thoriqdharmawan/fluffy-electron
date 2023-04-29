@@ -1,8 +1,17 @@
 import { gql } from '@apollo/client';
 
 export const GET_TOTAL_TRANSACTIONS_TODAY = gql`
-  query GetTotalTransactionToday($gte: timestamptz, $lte: timestamptz) {
-    total: transactions_aggregate(where: { created_at: { _gte: $gte, _lte: $lte } }) {
+  query GetTotalTransactionToday(
+    $gte: timestamptz
+    $lte: timestamptz
+    $companyId: uuid!
+  ) {
+    total: transactions_aggregate(
+      where: {
+        created_at: { _gte: $gte, _lte: $lte }
+        companyId: { _eq: $companyId }
+      }
+    ) {
       aggregate {
         count
       }
@@ -59,6 +68,33 @@ export const GET_LIST_PRODUCTS_MENUS = gql`
           min {
             price
           }
+        }
+      }
+    }
+  }
+`;
+
+export const GET_SCANNED_VARIANT = gql`
+  query GetScannedVariant($sku: String = "") {
+    product_variants(where: {sku: {_eq: $sku}}, limit: 1) {
+      id
+      coord
+      is_primary
+      price
+      price_wholesale
+      min_wholesale
+      sku
+      status
+      stock
+      product_variants_product {
+        id
+        name
+        image
+        type
+        variants {
+          id
+          values
+          name
         }
       }
     }
