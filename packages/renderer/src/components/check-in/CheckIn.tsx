@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Box, Center, Button, TextInput, Select, NumberInput } from '@mantine/core';
 import { useMutation, useQuery } from '@apollo/client';
-import { useDebouncedValue } from '@mantine/hooks';
 import { isNotEmpty, useForm } from '@mantine/form';
 
 import { useUser } from '/@/context/user';
@@ -19,12 +18,9 @@ interface Props {
 }
 
 export default function CheckIn(props: Props) {
-  const [search, setSearch] = useState('');
   const [loading, setLoading] = useState<boolean>(false);
-  const [debounce] = useDebouncedValue(search, 500);
-
   const [employees, setEmployees] = useState([]);
-  
+
   const { value } = useGlobal()
   const user = useUser();
 
@@ -54,9 +50,6 @@ export default function CheckIn(props: Props) {
       companyId,
       where: {
         companyId: companyId ? { _eq: companyId } : undefined,
-        _or: debounce
-          ? { name: { _ilike: `%${debounce}%` }, username: { _ilike: `%${debounce}%` } }
-          : undefined,
       },
     },
     onCompleted: (data) => {
@@ -111,9 +104,7 @@ export default function CheckIn(props: Props) {
           mb="md"
           label="Nama"
           placeholder="Pilih Nama Kamu"
-          searchable
           withAsterisk
-          onSearchChange={setSearch}
           data={employees}
           {...form.getInputProps('employee')}
         />
