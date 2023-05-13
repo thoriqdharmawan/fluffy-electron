@@ -3,7 +3,6 @@ import { Box, Center, Flex } from '@mantine/core';
 import { useQuery } from '@apollo/client';
 
 import { GET_TOTAL_TRANSACTIONS_TODAY, GET_ACTIVE_ATTENDACE } from '/@/graphql/query'
-import { NowEnd, NowStart } from '/@/context/global';
 import { useUser } from '/@/context/user';
 import client from '/@/apollo-client';
 import CheckIn from '/@/components/check-in/CheckIn';
@@ -12,6 +11,7 @@ import LoginButton from '/@/components/login/LoginButton';
 import Cart from './cart/Cart';
 import Products from './products/Products';
 import DetailModal from './order-details/DetailModal';
+import dayjs from 'dayjs';
 
 export default function Homepage() {
   const { companyId } = useUser();
@@ -38,8 +38,8 @@ export default function Homepage() {
     skip: !companyId,
     variables: {
       companyId,
-      gte: NowStart,
-      lte: NowEnd,
+      gte: dayjs().format('YYYY-MM-DD'),
+      lte: dayjs().add(1, 'day').format('YYYY-MM-DD'),
     },
   });
 
