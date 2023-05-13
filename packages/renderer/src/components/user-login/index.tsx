@@ -6,7 +6,7 @@ import {
 } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
 
-import { IconLogout, IconSettings } from '@tabler/icons';
+import { IconLogout } from '@tabler/icons';
 import { SignOut } from '/@/authentication';
 import { useUser } from '/@/context/user';
 
@@ -53,9 +53,9 @@ export function UserLogin() {
           </ActionIcon>
         </Menu.Target>
         <Menu.Dropdown>
-          <Menu.Item onClick={() => navigate('/setting')} icon={<IconSettings size={14} stroke={1.5} />}>
+          {/* <Menu.Item onClick={() => navigate('/setting')} icon={<IconSettings size={14} stroke={1.5} />}>
             Setting
-          </Menu.Item>
+          </Menu.Item> */}
           <Menu.Item onClick={handleLogout} icon={<IconLogout size={14} stroke={1.5} />}>
             Logout
           </Menu.Item>
