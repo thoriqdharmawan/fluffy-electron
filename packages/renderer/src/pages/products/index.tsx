@@ -33,7 +33,7 @@ export default function index() {
   const { value } = useGlobal()
   const user = useUser();
 
-  const companyId = value.selectedCompany || user.companyId
+  const companyId = value?.selectedCompany || user.companyId
 
   const [page, setPage] = useState<number>(1)
   const [search, setSearch] = useState<string>('')

@@ -17,7 +17,7 @@ import dayjs from 'dayjs';
 export default function Homepage() {
   const { value } = useGlobal()
   const user = useUser();
-  const companyId = value.selectedCompany || user.companyId
+  const companyId = value?.selectedCompany || user.companyId
   
   const [attendance, setAttendance] = useState();
   const [working, setWorking] = useState(true);

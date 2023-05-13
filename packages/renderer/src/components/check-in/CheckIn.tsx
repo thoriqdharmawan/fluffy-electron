@@ -24,7 +24,7 @@ export default function CheckIn(props: Props) {
   const { value } = useGlobal()
   const user = useUser();
 
-  const companyId = value.selectedCompany || user.companyId
+  const companyId = value?.selectedCompany || user.companyId
 
   const { onWork } = props;
 

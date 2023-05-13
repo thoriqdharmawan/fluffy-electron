@@ -28,7 +28,7 @@ const LIMIT = 10;
 const ListTransactions = ({ onClick }: TableOrderHistoriesProps) => {
   const { value } = useGlobal()
   const user = useUser();
-  const companyId = value.selectedCompany || user.companyId
+  const companyId = value?.selectedCompany || user.companyId
 
   const [filter, setFilter] = useState<string>('NOW')
 

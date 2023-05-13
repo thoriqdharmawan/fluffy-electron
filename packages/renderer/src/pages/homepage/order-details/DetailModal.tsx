@@ -56,7 +56,7 @@ export default function DetailModal(props: Props) {
   const { open, onClose, data, refetchTotalTransaction, transactionNumber, attendance } = props;
   const { value } = useGlobal()
   const user = useUser();
-  const companyId = value.selectedCompany || user.companyId
+  const companyId = value?.selectedCompany || user.companyId
   const { emptyCart } = useCart();
   const [active, setActive] = useState(0);
   const [error, setError] = useState(false);

@@ -61,7 +61,7 @@ const Products = (props: Props) => {
   const { addItem } = useCart();
   const { value } = useGlobal()
   const user = useUser();
-  const companyId = value.selectedCompany || user.companyId
+  const companyId = value?.selectedCompany || user.companyId
 
   const { ref, focused } = useFocusWithin();
 
