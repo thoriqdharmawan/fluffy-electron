@@ -4,7 +4,8 @@ import { useMutation, useQuery } from '@apollo/client';
 import { useDebouncedValue } from '@mantine/hooks';
 import { isNotEmpty, useForm } from '@mantine/form';
 
-import { useUser } from '../../context/user';
+import { useUser } from '/@/context/user';
+import { useGlobal } from '/@/context/global';
 import { GET_LIST_EMPLOYEES } from '/@/graphql/query';
 import { START_WORK } from '/@/graphql/mutation';
 
@@ -23,8 +24,12 @@ export default function CheckIn(props: Props) {
   const [debounce] = useDebouncedValue(search, 500);
 
   const [employees, setEmployees] = useState([]);
+  
+  const { value } = useGlobal()
+  const user = useUser();
 
-  const { companyId } = useUser();
+  const companyId = value.selectedCompany || user.companyId
+
   const { onWork } = props;
 
   const form = useForm({

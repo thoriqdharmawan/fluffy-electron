@@ -10,6 +10,7 @@ import { CartProvider } from 'react-use-cart';
 import { UserProvider } from './context/user'
 import ROUTER from './routes';
 import AuthStateChangeProvider from '/@/context/Auth';
+import { GlobalProvider } from './context/global';
 import { NotificationsProvider } from '@mantine/notifications';
 import dayjs from 'dayjs';
 import 'dayjs/locale/id'
@@ -50,7 +51,9 @@ export default function AppContainer() {
               <UserProvider>
                 <AuthStateChangeProvider>
                   <CartProvider>
-                    <MemoizedAppRouter />
+                    <GlobalProvider>
+                      <MemoizedAppRouter />
+                    </GlobalProvider>
                   </CartProvider>
                 </AuthStateChangeProvider>
               </UserProvider>

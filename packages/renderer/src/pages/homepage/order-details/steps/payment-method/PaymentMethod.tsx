@@ -5,10 +5,6 @@ import { UseFormReturnType } from '@mantine/form';
 import { FormValues } from '../../DetailModal';
 import { convertToRupiah } from '/@/context/helpers';
 import CheckboxCard from '/@/components/checkbox/CheckboxCard';
-// import { useQuery } from '@apollo/client';
-// import { GET_LIST_CUSTOMERS } from '/@/graphql/query';
-// import client from '/@/apollo-client';
-
 interface Props {
   totalPayment: number;
   form: UseFormReturnType<FormValues>;
@@ -17,13 +13,6 @@ interface Props {
 
 export default function PaymentMethod(props: Props) {
   const { totalPayment, form, error } = props;
-
-  // const { data, error: errorFethc } = useQuery(GET_LIST_CUSTOMERS, {
-  //   client: client,
-  // })
-
-  // console.log("data ? ", data)
-  // console.log("errorFethc ? ", errorFethc)
 
   const PAYMENTS = [
     {
@@ -64,27 +53,6 @@ export default function PaymentMethod(props: Props) {
 
   const isErrorPaymentMethod = error && !form.values.paymentMethod;
 
-  // const handleChangeCustomer = (value: string) => {
-  //   if (value !== '0') {
-  //     const _data = [...data]
-  //     const _customers = _data?.customers?.find((cus: any) => cus.id === Number(value));
-
-  //     form.setFieldValue('customer', {
-  //       name: value,
-  //       phone: Number(_customers?.phone),
-  //       address: _customers?.address || '',
-  //       note: _customers?.note || '',
-  //     });
-  //   } else {
-  //     form.setFieldValue('customer', {
-  //       name: value,
-  //       phone: undefined,
-  //       address: '',
-  //       note: '',
-  //     });
-  //   }
-  // };
-
   return (
     <Box p="md">
       <SimpleGrid
@@ -104,15 +72,7 @@ export default function PaymentMethod(props: Props) {
             labelProps={{ mb: 8 }}
             mb="sm"
             data={[{value: '0', label: 'Umum'}]}
-            // data={[
-            //   { value: '0', label: 'Umum' },
-            //   ...data?.customers.map((customer: any) => ({
-            //     value: `${customer.id}`,
-            //     label: customer.name,
-            //   })),
-            // ]}
             {...form.getInputProps('customer.name')}
-            // onChange={handleChangeCustomer}
           />
           <NumberInput
             label="Nomor HP"

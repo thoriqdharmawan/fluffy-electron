@@ -10,6 +10,7 @@ import { Empty } from '/@/components/empty-state';
 import { GET_LIST_PRODUCTS_MENUS, GET_SCANNED_VARIANT } from '/@/graphql/query';
 import { getPrices } from '/@/context/helpers';
 import { useUser } from '/@/context/user';
+import { useGlobal } from '/@/context/global';
 
 import client from '/@/apollo-client';
 
@@ -58,7 +59,10 @@ const EMPTY_SEARCH = {
 const Products = (props: Props) => {
   const { attendanceId, employeeName, onDoneWork } = props;
   const { addItem } = useCart();
-  const { companyId } = useUser();
+  const { value } = useGlobal()
+  const user = useUser();
+  const companyId = value.selectedCompany || user.companyId
+
   const { ref, focused } = useFocusWithin();
 
   const [openCheckout, setOpenCheckout] = useState<boolean>(false);

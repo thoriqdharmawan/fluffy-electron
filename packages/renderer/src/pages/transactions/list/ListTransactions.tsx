@@ -10,6 +10,7 @@ import { GLOBAL_FORMAT_DATE, TRANSACTION_STATUS, VARIABLES_DATE } from '../../..
 
 import { Empty } from '/@/components/empty-state';
 import { useUser } from '/@/context/user';
+import { useGlobal } from '/@/context/global';
 import client from '/@/apollo-client';
 import Loading from '/@/components/loading/Loading';
 import Chips from '/@/components/chips/Chips';
@@ -25,7 +26,10 @@ const getVariableDate = (variant: string = 'NOW') => {
 const LIMIT = 10;
 
 const ListTransactions = ({ onClick }: TableOrderHistoriesProps) => {
-  const { companyId } = useUser();
+  const { value } = useGlobal()
+  const user = useUser();
+  const companyId = value.selectedCompany || user.companyId
+
   const [filter, setFilter] = useState<string>('NOW')
 
   const [page, setPage] = useState<number>(1)

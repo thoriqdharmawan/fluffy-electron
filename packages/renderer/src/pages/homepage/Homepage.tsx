@@ -4,6 +4,7 @@ import { useQuery } from '@apollo/client';
 
 import { GET_TOTAL_TRANSACTIONS_TODAY, GET_ACTIVE_ATTENDACE } from '/@/graphql/query'
 import { useUser } from '/@/context/user';
+import { useGlobal } from '/@/context/global';
 import client from '/@/apollo-client';
 import CheckIn from '/@/components/check-in/CheckIn';
 import LoginButton from '/@/components/login/LoginButton';
@@ -14,7 +15,10 @@ import DetailModal from './order-details/DetailModal';
 import dayjs from 'dayjs';
 
 export default function Homepage() {
-  const { companyId } = useUser();
+  const { value } = useGlobal()
+  const user = useUser();
+  const companyId = value.selectedCompany || user.companyId
+  
   const [attendance, setAttendance] = useState();
   const [working, setWorking] = useState(true);
 
