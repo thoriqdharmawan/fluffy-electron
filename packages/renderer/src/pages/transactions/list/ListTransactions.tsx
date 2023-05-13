@@ -6,7 +6,7 @@ import dayjs from 'dayjs';
 
 import { GET_LIST_TRANSACTIONS } from '/@/graphql/query';
 import { convertToRupiah } from '/@/context/helpers';
-import { GLOBAL_FORMAT_DATE, TRANSACTION_STATUS, VARIABLES_DATE } from '/@/context/global';
+import { GLOBAL_FORMAT_DATE, TRANSACTION_STATUS, VARIABLES_DATE } from '../../../context/common';
 
 import { Empty } from '/@/components/empty-state';
 import { useUser } from '/@/context/user';

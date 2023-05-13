@@ -5,7 +5,7 @@ import Skeleton from 'react-loading-skeleton';
 
 import { GET_DETAIL_TRANSACTION } from '/@/graphql/query';
 import { convertToRupiah } from '/@/context/helpers';
-import { GLOBAL_FORMAT_DATE, TRANSACTION_METHOD, TRANSACTION_STATUS, TRANSACTION_TYPE } from '/@/context/global';
+import { GLOBAL_FORMAT_DATE, TRANSACTION_METHOD, TRANSACTION_STATUS, TRANSACTION_TYPE } from '../../../context/common';
 import client from '/@/apollo-client';
 import PrintIcon from '/@/components/print/PrintIcon';
 
