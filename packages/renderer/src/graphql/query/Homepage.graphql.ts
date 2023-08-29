@@ -115,26 +115,16 @@ export const GET_PRODUCT_BY_ID = gql`
       image
       description
       type
-      categories {
+      product_variants (order_by: {id: asc}) {
         id
         name
-      }
-      product_variants {
-        id
-        coord
         is_primary
         price
         price_wholesale
         min_wholesale
         sku
-        status
         stock
         productId
-      }
-      variants {
-        id
-        values
-        name
       }
       product_variants_aggregate {
         aggregate {

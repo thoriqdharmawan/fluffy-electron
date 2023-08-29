@@ -4,7 +4,7 @@ import { useDisclosure } from '@mantine/hooks';
 import { useCart } from 'react-use-cart';
 import { IconPlus } from '@tabler/icons';
 
-import { convertToRupiah, getVariants } from '/@/context/helpers';
+import { convertToRupiah } from '/@/context/helpers';
 import { Empty } from '/@/components/empty-state';
 import AddManualProduct from './AddManualProduct';
 import ProductItemCart from './ProductItemCart';
@@ -50,11 +50,9 @@ export default function Cart(props: Props) {
         </Flex>
         <Box px="md">
           {allItems?.map((item: any, i) => {
-            const { variants, coord, min_wholesale, price_wholesale, price, quantity } = item || {};
+            const { variantName, min_wholesale, price_wholesale, price, quantity } = item || {};
 
             const actualPrice = (quantity >= min_wholesale ? price_wholesale || price : price) || 0
-
-            const variant = getVariants(variants, coord);
 
             return (
               <ProductItemCart
@@ -65,7 +63,7 @@ export default function Cart(props: Props) {
                 src={item.src}
                 price={convertToRupiah(actualPrice)}
                 subtotal={convertToRupiah(actualPrice * quantity)}
-                variants={variant}
+                variantName={variantName}
                 onAdd={() => updateItemQuantity(item.id, (quantity || 0) + 1)}
                 onSubtract={() => updateItemQuantity(item.id, (quantity || 0) - 1)}
                 onRemove={() => removeItem(item.id)}

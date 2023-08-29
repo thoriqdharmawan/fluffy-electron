@@ -10,7 +10,7 @@ type Props = {
   price: string;
   subtotal: string;
   quantity: number;
-  variants: string[];
+  variantName: string;
   onAdd: () => void;
   onSubtract: () => void;
   onRemove: () => void;
@@ -23,7 +23,7 @@ export default function ProductItemCart({
   name,
   price,
   subtotal,
-  variants,
+  variantName,
   onAdd,
   onSubtract,
   onRemove,
@@ -58,11 +58,11 @@ export default function ProductItemCart({
             </Text>
           </Flex>
           <Flex mt="sm" gap="sm">
-            {variants.map((v, i) => (
-              <Badge sx={{ textTransform: 'capitalize' }} key={i}>
-                {v}
+            {variantName && (
+              <Badge sx={{ textTransform: 'unset' }}>
+                {variantName}
               </Badge>
-            ))}
+            )}
           </Flex>
         </Box>
       </Flex>

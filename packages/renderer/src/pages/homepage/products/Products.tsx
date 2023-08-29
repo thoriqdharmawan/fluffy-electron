@@ -19,6 +19,7 @@ import ProductCardV2 from '/@/components/cards/ProductCardV2';
 import DetailProduct from './detail/DetailProduct';
 import Loading from '/@/components/loading/Loading';
 import ModalCheckout from './ModalCheckout';
+import { PRODUCT_STATUS } from '/@/constant/global';
 
 interface Props {
   employeeId: string;
@@ -121,6 +122,7 @@ const Products = (props: Props) => {
       offset: 0,
       where: {
         _and: {
+          status: { _eq: PRODUCT_STATUS.ACTIVE },
           company: { id: { _eq: companyId } },
           _or: debounce ? [
             { product_variants: { sku: { _eq: search } } },
