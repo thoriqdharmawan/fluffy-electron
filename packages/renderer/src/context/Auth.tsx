@@ -9,7 +9,6 @@ const AuthStateChangeProvider = ({ children }: { children: React.ReactNode }) =>
   const InitiateAuthStateChange = () => {
     Authentication().onAuthStateChanged((user) => {
       if (user) {
-        // console.log('User is authenticated')
         if(SetUser) {
           SetUser({
             uid: user.uid,
@@ -20,7 +19,6 @@ const AuthStateChangeProvider = ({ children }: { children: React.ReactNode }) =>
           })
         }
       } else {
-        // console.log('User is not authenticated')
         if(SetUser) {
           SetUser(InitialUserState)
         }

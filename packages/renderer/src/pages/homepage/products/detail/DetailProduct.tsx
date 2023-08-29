@@ -10,6 +10,7 @@ import {
   Image,
   Flex,
   NumberInput,
+  Chip,
 } from '@mantine/core';
 import { IconPlus, IconMinus, IconShoppingCart } from '@tabler/icons';
 import { useCart } from 'react-use-cart';
@@ -19,7 +20,6 @@ import { GET_PRODUCT_BY_ID } from '/@/graphql/query';
 import { convertToRupiah, getPrices } from '/@/context/helpers';
 import client from '/@/apollo-client';
 
-import SelectVariants from '/@/components/cards/SelectVariants';
 import Loading from '/@/components/loading/Loading';
 
 interface Props {
@@ -59,7 +59,6 @@ export default function DetailProduct(props: Props) {
 
   const [quantity, setQuantity] = useState<number>(1);
   const [selectedPV, setSelectedPV] = useState<any>(undefined);
-  const [coord, setCoord] = useState<number[] | undefined>(undefined);
 
   const { data, loading, error } = useQuery(GET_PRODUCT_BY_ID, {
     fetchPolicy: 'cache-and-network',
@@ -73,7 +72,6 @@ export default function DetailProduct(props: Props) {
 
       const selected = product_variants?.filter((pv: any) => pv.is_primary)?.[0] || {};
       setSelectedPV(selected);
-      setCoord(selected.coord);
     },
   });
 
@@ -107,32 +105,15 @@ export default function DetailProduct(props: Props) {
         return key === '__typename' ? undefined : value;
       });
 
-      addItem({ ...pure, productId: id, name, src: image, variants, type }, quantity);
+      addItem({ ...pure, variantName: pure.name, productId: id, name, src: image, variants, type }, quantity);
 
       handleClose();
     }
   };
 
-  const handleSelectVariant = (value: string, values: string[], index: number) => {
-    const indexOfVariant = values.indexOf(value);
-
-    setCoord(() => {
-      const result = [...(coord || [])];
-      result[index] = indexOfVariant;
-
-      const pv = product_variants.find((pv: any) => {
-        const coord0 = pv.coord[0] === result[0];
-        const coord1 = pv.coord[1] === result[1];
-
-        return coord0 && (variants?.length === 2 ? coord1 : true);
-      });
-
-      if (pv) {
-        setSelectedPV(pv);
-      }
-
-      return result;
-    });
+  const handleSelectVariant = (variantId: any) => {
+    const selected = product_variants.filter((variant: any) => variant.id === Number(variantId))
+    setSelectedPV(selected?.[0] || {});
   };
 
   const rangePrice = useMemo(() => {
@@ -172,18 +153,18 @@ export default function DetailProduct(props: Props) {
 
           <Section label="Deskripsi Produk" value={description || '-'} />
 
-          {variants?.map((variant: any, i: number) => {
-            const variantIndex = selectedPV?.coord?.[i];
-            return (
-              <SelectVariants
-                key={i}
-                value={variant.values?.[variantIndex]}
-                title={variant.name}
-                variants={variant.values}
-                onChange={(value: string) => handleSelectVariant(value, variant.values, i)}
-              />
-            );
-          })}
+          <Box mb="md">
+            <Title order={6} mb="xs">
+              Varian
+            </Title>
+            <Chip.Group value={selectedPV?.id} onChange={handleSelectVariant} position="left">
+              {product_variants?.map((variant: any, idx: number) => (
+                <Chip checked={selectedPV?.id === variant?.id} key={idx} value={variant.id}>
+                  {variant?.name}
+                </Chip>
+              ))}
+            </Chip.Group>
+          </Box>
 
           <Section label="Stok" value={availableStock || 0} />
 

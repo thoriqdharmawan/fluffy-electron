@@ -4,15 +4,17 @@ import { IconEye } from '@tabler/icons';
 import { useQuery } from '@apollo/client';
 import dayjs from 'dayjs';
 
-import { GET_LIST_TRANSACTIONS } from '/@/graphql/query';
+import { GET_INCOMES, GET_LIST_TRANSACTIONS } from '/@/graphql/query';
 import { convertToRupiah } from '/@/context/helpers';
-import { GLOBAL_FORMAT_DATE, TRANSACTION_STATUS, VARIABLES_DATE } from '/@/context/global';
+import { GLOBAL_FORMAT_DATE, TRANSACTION_STATUS, VARIABLES_DATE } from '../../../context/common';
 
 import { Empty } from '/@/components/empty-state';
 import { useUser } from '/@/context/user';
+import { useGlobal } from '/@/context/global';
 import client from '/@/apollo-client';
 import Loading from '/@/components/loading/Loading';
 import Chips from '/@/components/chips/Chips';
+import Incomes from '../incomes/Incomes';
 
 interface TableOrderHistoriesProps {
   onClick: (id: string) => void;
@@ -25,7 +27,10 @@ const getVariableDate = (variant: string = 'NOW') => {
 const LIMIT = 10;
 
 const ListTransactions = ({ onClick }: TableOrderHistoriesProps) => {
-  const { companyId } = useUser();
+  const { value } = useGlobal()
+  const user = useUser();
+  const companyId = value?.selectedCompany || user.companyId
+
   const [filter, setFilter] = useState<string>('NOW')
 
   const [page, setPage] = useState<number>(1)
@@ -74,6 +79,17 @@ const ListTransactions = ({ onClick }: TableOrderHistoriesProps) => {
     },
   });
 
+  const { data: dataIncomes, loading: loadingIncomes } = useQuery(GET_INCOMES, {
+    client,
+    skip: !companyId,
+    fetchPolicy: 'network-only',
+    variables: {
+      ...getVariableDate(filter),
+      companyId: companyId
+    }
+  })
+
+
 
   useEffect(() => setPage(1), [filter])
 
@@ -82,6 +98,23 @@ const ListTransactions = ({ onClick }: TableOrderHistoriesProps) => {
   }
 
   const totalPage = Math.ceil((data?.total.aggregate.count || 0) / LIMIT);
+
+  const incomesData = useMemo(() => {
+    const { count, sum } = dataIncomes?.transactions_aggregate?.aggregate || {}
+
+    return [
+      {
+        title: "Pendapatan",
+        value: convertToRupiah(sum?.total_amount || 0),
+        description: 'Total uang yang didapatkan'
+      },
+      {
+        title: "Total Transaksi",
+        value: count || 0,
+        description: 'Total transaksi yang telah terjadi'
+      },
+    ]
+  }, [dataIncomes])
 
   const rows = data?.transactions?.map((row: any) => {
     return (
@@ -104,6 +137,8 @@ const ListTransactions = ({ onClick }: TableOrderHistoriesProps) => {
   return (
     <>
       <Chips data={chips} onChange={setFilter} />
+
+      <Incomes data={incomesData} loading={loadingIncomes} />
 
       <Title order={4} mb="md">
         Total Transaksi: {data?.total.aggregate.count}

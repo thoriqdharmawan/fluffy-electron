@@ -10,6 +10,7 @@ import { Empty } from '/@/components/empty-state';
 import { GET_LIST_PRODUCTS_MENUS, GET_SCANNED_VARIANT } from '/@/graphql/query';
 import { getPrices } from '/@/context/helpers';
 import { useUser } from '/@/context/user';
+import { useGlobal } from '/@/context/global';
 
 import client from '/@/apollo-client';
 
@@ -18,6 +19,7 @@ import ProductCardV2 from '/@/components/cards/ProductCardV2';
 import DetailProduct from './detail/DetailProduct';
 import Loading from '/@/components/loading/Loading';
 import ModalCheckout from './ModalCheckout';
+import { PRODUCT_STATUS } from '/@/constant/global';
 
 interface Props {
   employeeId: string;
@@ -58,7 +60,10 @@ const EMPTY_SEARCH = {
 const Products = (props: Props) => {
   const { attendanceId, employeeName, onDoneWork } = props;
   const { addItem } = useCart();
-  const { companyId } = useUser();
+  const { value } = useGlobal()
+  const user = useUser();
+  const companyId = value?.selectedCompany || user.companyId
+
   const { ref, focused } = useFocusWithin();
 
   const [openCheckout, setOpenCheckout] = useState<boolean>(false);
@@ -117,6 +122,7 @@ const Products = (props: Props) => {
       offset: 0,
       where: {
         _and: {
+          status: { _eq: PRODUCT_STATUS.ACTIVE },
           company: { id: { _eq: companyId } },
           _or: debounce ? [
             { product_variants: { sku: { _eq: search } } },

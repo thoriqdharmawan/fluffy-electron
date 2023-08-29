@@ -53,6 +53,9 @@ export function UserLogin() {
           </ActionIcon>
         </Menu.Target>
         <Menu.Dropdown>
+          {/* <Menu.Item onClick={() => navigate('/setting')} icon={<IconSettings size={14} stroke={1.5} />}>
+            Setting
+          </Menu.Item> */}
           <Menu.Item onClick={handleLogout} icon={<IconLogout size={14} stroke={1.5} />}>
             Logout
           </Menu.Item>

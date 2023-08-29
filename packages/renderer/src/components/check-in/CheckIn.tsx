@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { Box, Center, Button, TextInput, Select, NumberInput } from '@mantine/core';
 import { useMutation, useQuery } from '@apollo/client';
-import { useDebouncedValue } from '@mantine/hooks';
 import { isNotEmpty, useForm } from '@mantine/form';
 
-import { useUser } from '../../context/user';
+import { useUser } from '/@/context/user';
+import { useGlobal } from '/@/context/global';
 import { GET_LIST_EMPLOYEES } from '/@/graphql/query';
 import { START_WORK } from '/@/graphql/mutation';
 
@@ -18,13 +18,14 @@ interface Props {
 }
 
 export default function CheckIn(props: Props) {
-  const [search, setSearch] = useState('');
   const [loading, setLoading] = useState<boolean>(false);
-  const [debounce] = useDebouncedValue(search, 500);
-
   const [employees, setEmployees] = useState([]);
 
-  const { companyId } = useUser();
+  const { value } = useGlobal()
+  const user = useUser();
+
+  const companyId = value?.selectedCompany || user.companyId
+
   const { onWork } = props;
 
   const form = useForm({
@@ -49,9 +50,6 @@ export default function CheckIn(props: Props) {
       companyId,
       where: {
         companyId: companyId ? { _eq: companyId } : undefined,
-        _or: debounce
-          ? { name: { _ilike: `%${debounce}%` }, username: { _ilike: `%${debounce}%` } }
-          : undefined,
       },
     },
     onCompleted: (data) => {
@@ -106,9 +104,7 @@ export default function CheckIn(props: Props) {
           mb="md"
           label="Nama"
           placeholder="Pilih Nama Kamu"
-          searchable
           withAsterisk
-          onSearchChange={setSearch}
           data={employees}
           {...form.getInputProps('employee')}
         />

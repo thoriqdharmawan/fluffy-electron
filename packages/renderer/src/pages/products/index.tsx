@@ -6,6 +6,7 @@ import { useDebouncedValue } from "@mantine/hooks";
 import { GET_LIST_PRODUCTS } from "/@/graphql/query";
 import { Empty } from "/@/components/empty-state";
 import { useUser } from "/@/context/user";
+import { useGlobal } from "/@/context/global";
 import HeaderSection from "/@/components/header/HeaderSection";
 import Loading from "/@/components/loading/Loading";
 import SearchBar from "/@/components/SearchBar";
@@ -29,7 +30,10 @@ const EMPTY_SEARCH = {
 
 
 export default function index() {
-  const { companyId } = useUser();
+  const { value } = useGlobal()
+  const user = useUser();
+
+  const companyId = value?.selectedCompany || user.companyId
 
   const [page, setPage] = useState<number>(1)
   const [search, setSearch] = useState<string>('')

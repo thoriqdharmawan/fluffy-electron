@@ -12,6 +12,7 @@ import PayNow from './steps/PayNow';
 import { addTransaction, decreaseStock } from './transaction';
 import { getVariants } from '/@/context/helpers';
 import { useUser } from '/@/context/user';
+import { useGlobal } from '/@/context/global';
 
 type Props = {
   open: boolean;
@@ -53,8 +54,10 @@ const getNextLabel = (active: number) => {
 
 export default function DetailModal(props: Props) {
   const { open, onClose, data, refetchTotalTransaction, transactionNumber, attendance } = props;
+  const { value } = useGlobal()
+  const user = useUser();
+  const companyId = value?.selectedCompany || user.companyId
   const { emptyCart } = useCart();
-  const { companyId } = useUser();
   const [active, setActive] = useState(0);
   const [error, setError] = useState(false);
   const [transactionId, setTransactionId] = useState<string>('');
@@ -116,7 +119,6 @@ export default function DetailModal(props: Props) {
       status: offset >= 0 ? 'COMPLETED' : 'INCOMPLETE',
       employeeId: attendance?.employee?.id,
       companyId: companyId,
-      // merchantId: null,
       products_solds: data?.map((product) => {
         const variants = getVariants(product.variants, product.coord);
 

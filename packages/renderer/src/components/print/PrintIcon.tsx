@@ -2,7 +2,7 @@ import { Button, Flex } from '@mantine/core'
 import { IconPrinter } from '@tabler/icons'
 import { GET_TRANSACTIONS_BY_ID } from '/@/graphql/query'
 import client from '/@/apollo-client'
-import { GLOBAL_FORMAT_DATE } from '/@/context/global'
+import { GLOBAL_FORMAT_DATE } from '../../context/common'
 import dayjs from 'dayjs'
 import { print } from "#preload";
 
