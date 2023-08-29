@@ -14,7 +14,6 @@ import client from '/@/apollo-client';
 interface Props {
   opened: boolean;
   id: string | undefined;
-  coord?: number[] | undefined;
   onClose: () => void;
   refetch: any;
 }
@@ -105,11 +104,10 @@ export default function SwitchStock(props: Props) {
     onCompleted: ({ product_variants, variants }) => {
       setListVariant(() => {
         return product_variants.map((pv: any) => {
-          const variantName = getVariants(variants, pv.coord).join(" - ")
           return {
             id: pv.id,
-            label: variantName,
-            value: variantName,
+            label: pv.name,
+            value: pv.name,
             scale: pv.scale,
             stock: pv.stock,
           }
