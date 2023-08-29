@@ -7,6 +7,7 @@ import { GET_LIST_PRODUCTS } from "/@/graphql/query";
 import { Empty } from "/@/components/empty-state";
 import { useUser } from "/@/context/user";
 import { useGlobal } from "/@/context/global";
+import { PRODUCT_STATUS } from "/@/constant/global";
 import HeaderSection from "/@/components/header/HeaderSection";
 import Loading from "/@/components/loading/Loading";
 import SearchBar from "/@/components/SearchBar";
@@ -48,6 +49,7 @@ export default function index() {
       offset: (page - 1) * LIMIT,
       where: {
         _and: {
+          status: { _eq: PRODUCT_STATUS.ACTIVE },
           company: { id: { _eq: companyId } },
           _or: debounce ? [
             { product_variants: { sku: { _eq: debounce } } },

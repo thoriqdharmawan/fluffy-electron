@@ -152,17 +152,11 @@ export default function ProductItem(props: Props) {
             {openVariants &&
               !loadingVariants &&
               dataVariants?.product_variants?.map((productVariant: any) => {
-                const { variants } = dataVariants;
-                const { coord } = productVariant;
-
-                const variant1 = variants?.[0]?.values[coord[0]] || null;
-                const variant2 = variants?.[1]?.values[coord[1]] || null;
-
                 return (
                   <ListProductVariant
                     key={productVariant.id}
                     id={productVariant.id}
-                    name={[variant1, variant2].filter((data) => data).join(' | ')}
+                    name={productVariant?.name || '-'}
                     sku={productVariant.sku}
                     price={productVariant.price}
                     price_wholesale={productVariant.price_wholesale}

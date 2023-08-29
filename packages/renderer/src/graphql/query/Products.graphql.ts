@@ -19,18 +19,12 @@ export const GET_LIST_PRODUCTS = gql`
       type
       product_variants(limit: 1) {
         id
-        coord
         is_primary
         price
         price_wholesale
         sku
         status
         stock
-      }
-      variants {
-        id
-        values
-        name
       }
       product_variants_aggregate {
         aggregate {
@@ -45,14 +39,9 @@ export const GET_LIST_PRODUCTS = gql`
 
 export const GET_LIST_PRODUCT_VARIANTS = gql`
   query GetProductVariants($productId: uuid!) {
-    variants(where: { productId: { _eq: $productId } }, order_by: { id: asc }) {
-      id
-      values
-      name
-    }
     product_variants(where: { productId: { _eq: $productId } }, order_by: { id: asc }) {
       id
-      coord
+      name
       is_primary
       price
       price_wholesale
@@ -80,14 +69,9 @@ export const EDIT_PRODUCT_STOCK = gql`
 
 export const GET_LIST_PRODUCT_VARIANTS_STOCK = gql`
   query GetProductVariants($productId: uuid!) {
-    variants(where: { productId: { _eq: $productId } }, order_by: { id: asc }) {
-      id
-      values
-      name
-    }
     product_variants(where: { productId: { _eq: $productId } }, order_by: { id: asc }) {
       id
-      coord
+      name
       scale
       stock
     }
