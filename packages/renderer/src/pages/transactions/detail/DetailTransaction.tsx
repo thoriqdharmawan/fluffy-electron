@@ -81,15 +81,13 @@ export default function DetailTransaction(props: Props) {
             </thead>
             <tbody>
               {products_solds?.map((product: any, idx: number) => {
-                const variants = product.variants.join(', ');
-
                 return (
                   <tr key={idx}>
                     <td>
                       <Text maw="140px">{product.name}</Text>
                     </td>
                     <td>
-                      {variants || (
+                      {product?.variant_name || (
                         <Text color="dimmed" fs="italic">
                           Tidak ada varian
                         </Text>

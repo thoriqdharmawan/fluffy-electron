@@ -10,7 +10,6 @@ import CompletePayment from './steps/CompletePayment';
 import PaymentMethod from './steps/payment-method/PaymentMethod';
 import PayNow from './steps/PayNow';
 import { addTransaction, decreaseStock } from './transaction';
-import { getVariants } from '/@/context/helpers';
 import { useUser } from '/@/context/user';
 import { useGlobal } from '/@/context/global';
 
@@ -120,7 +119,6 @@ export default function DetailModal(props: Props) {
       employeeId: attendance?.employee?.id,
       companyId: companyId,
       products_solds: data?.map((product) => {
-        const variants = getVariants(product.variants, product.coord);
 
         return {
           name: product.name,
@@ -128,7 +126,7 @@ export default function DetailModal(props: Props) {
           quantity_sold: product.quantity,
           unit_price: product.price,
           total_price: product.quantity * product.price,
-          variants,
+          variant_name: product.variantName,
         };
       }),
     };
