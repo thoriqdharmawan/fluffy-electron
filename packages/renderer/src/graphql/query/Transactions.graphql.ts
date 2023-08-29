@@ -57,7 +57,7 @@ export const GET_DETAIL_TRANSACTION = gql`
         quantity_sold
         total_price
         unit_price
-        variants
+        variant_name
       }
       employee {
         id

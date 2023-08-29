@@ -1,6 +1,6 @@
 import { Badge, Box, Flex, Text, Image, Table } from '@mantine/core';
 
-import { convertToRupiah, getVariants } from '/@/context/helpers';
+import { convertToRupiah } from '/@/context/helpers';
 
 interface Props {
   open: boolean;
@@ -12,8 +12,6 @@ export default function DetailOrders(props: Props) {
   const { products, totalPayment } = props;
 
   const rows = products?.map((product) => {
-    const variants = getVariants(product.variants, product.coord);
-    const isVariant = product.type === 'VARIANT';
 
     const isWholesale = product.quantity >= product.min_wholesale;
     const actualPrice = isWholesale ? product.price_wholesale : product.price;
@@ -26,12 +24,10 @@ export default function DetailOrders(props: Props) {
         <td>{product.name}</td>
         <td>
           <Flex gap="sm">
-            {isVariant ? (
-              variants?.map((variant, i) => (
-                <Badge key={i} sx={{ textTransform: 'capitalize' }}>
-                  {variant}
-                </Badge>
-              ))
+            {product?.variantName ? (
+              <Badge sx={{ textTransform: 'capitalize' }}>
+                {product?.variantName}
+              </Badge>
             ) : (
               <Text fs="italic" color="dimmed">
                 Tidak ada varian

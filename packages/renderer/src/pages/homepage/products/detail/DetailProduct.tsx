@@ -98,17 +98,13 @@ export default function DetailProduct(props: Props) {
     }, [selectedPV, open]) || 0;
 
   const handleAddToCart = () => {
-    if ((!!selectedPV || type === 'NOVARIANT') && quantity > 0) {
-      const selected = type === 'NOVARIANT' ? product_variants?.[0] : selectedPV;
+    const pure = JSON.parse(JSON.stringify(selectedPV), (key, value) => {
+      return key === '__typename' ? undefined : value;
+    });
 
-      const pure = JSON.parse(JSON.stringify(selected), (key, value) => {
-        return key === '__typename' ? undefined : value;
-      });
+    addItem({ ...pure, variantName: pure.name, productId: id, name, src: image, variants, type }, quantity);
 
-      addItem({ ...pure, variantName: pure.name, productId: id, name, src: image, variants, type }, quantity);
-
-      handleClose();
-    }
+    handleClose();
   };
 
   const handleSelectVariant = (variantId: any) => {
