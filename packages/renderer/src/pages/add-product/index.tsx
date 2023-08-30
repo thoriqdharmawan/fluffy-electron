@@ -39,9 +39,9 @@ const AddProduct = () => {
         {
           name: "",
           sku: "",
-          price: null,
-          price_purchase: null,
-          price_wholesale: null,
+          price: undefined,
+          price_purchase: undefined,
+          price_wholesale: undefined,
           min_wholesale: 1,
           has_price_purchase: false,
           has_price_wholesale: false,
@@ -258,9 +258,6 @@ const AddProduct = () => {
         </Paper>
         <Flex justify="end" align="center">
           <Group position="right" mt="md">
-            <Button variant="subtle" onClick={handleSubmit}>
-              Simpan dan Tambah Baru
-            </Button>
             <Button onClick={handleSubmit}>Tambahkan Produk</Button>
           </Group>
         </Flex>
