@@ -1,21 +1,29 @@
 import { useState } from "react";
-
 import { Box, Button, Col, Flex, Grid, Group, LoadingOverlay, Paper, TextInput, Textarea, Title } from "@mantine/core";
-
+import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
 import type { ProductsCardProps, VariantInterface } from "./addProductInteface";
-
 import { useForm } from "@mantine/form";
-
-import { GLOABL_STATUS } from "/@/constant/global";
-
+import { GLOABL_STATUS, PRODUCT_STATUS } from "/@/constant/global";
 import type { FileWithPath } from "@mantine/dropzone";
+import { useGlobal } from "/@/context/global";
+import { useUser } from "/@/context/user";
+import { ADD_PRODUCT, UPDATE_IMAGE_PRODUCT } from "/@/graphql/mutation";
+import { showNotification } from "@mantine/notifications";
+import { IconCheck, IconExclamationMark } from "@tabler/icons";
 
 import HeaderSection from "/@/components/header/HeaderSection";
 import DropzoneUpload from "/@/components/dropzone/DropzoneUpload";
+import AddProductVariant from "./variant/AddProductVariant";
+import client from "/@/apollo-client";
 
 export interface FormValues extends ProductsCardProps { }
 
 const AddProduct = () => {
+  const { value } = useGlobal();
+  const user: any = useUser();
+  
+  const companyId = value.selectedCompany || user.companyId;
+
   const [files, setFiles] = useState<FileWithPath[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -75,8 +83,116 @@ const AddProduct = () => {
     },
   });
 
-  const handleSubmit = async (goToList: boolean) => {
+  const showError = (title: string) => {
+    showNotification({
+      title: title,
+      message: 'Coba Lagi nanti',
+      icon: <IconExclamationMark />,
+      color: 'red',
+    });
+  };
 
+  const handleUploadImage = (productId: string) => {
+    const storage = getStorage();
+    const storageRef = ref(storage, 'products/' + productId);
+
+    uploadBytes(storageRef, files[0])
+      .then(() => {
+        getDownloadURL(storageRef).then((url: string) => {
+          client
+            .mutate({
+              mutation: UPDATE_IMAGE_PRODUCT,
+              variables: {
+                id: productId,
+                image: url,
+              },
+            })
+            .then(() => {
+              showNotification({
+                title: 'Yeayy, Sukses!! 😊',
+                message: 'Produk berhasil dibuat',
+                icon: <IconCheck />,
+                color: 'green',
+              });
+            })
+            .catch(() => showError('Gagal Menambahkan Foto Produk 🤥'))
+            .finally(() => {
+              form.reset();
+              setLoading(false);
+              handleDeleteFiles();
+            });
+        });
+      })
+      .catch(() => {
+        setLoading(false);
+        showError('Gagal Menambahkan Foto Produk 🤥');
+      });
+  };
+
+  const handleSubmit = async () => {
+    const { hasErrors } = form.validate();
+
+    if (!hasErrors) {
+      setLoading(true);
+
+      const { values } = form;
+
+      const variables = {
+        name: values.name,
+        image: values.image,
+        companyId,
+        description: values.description,
+        type: values.type,
+        categories: values.categories?.map((category) => ({
+          name: category,
+          companyId,
+        })),
+        variants: values.variants?.map((variant) => ({
+          name: variant.label,
+          values: variant.values,
+        })),
+        status: PRODUCT_STATUS.WAITING_FOR_APPROVAL,
+        product_variants: values.productVariants?.map((product_variant) => {
+          const {
+            has_price_purchase,
+            has_price_wholesale,
+            price_purchase,
+            price_wholesale,
+            price,
+            variant_scale,
+          } = product_variant;
+
+          const pricePurchase = has_price_purchase ? price_purchase : price;
+          const priceWholesale = has_price_wholesale ? price_wholesale : price;
+
+          return {
+            coord: product_variant.coord,
+            name: product_variant.name,
+            is_primary: product_variant.isPrimary,
+            price: product_variant.price,
+            price_purchase: pricePurchase,
+            price_wholesale: priceWholesale,
+            scale: variant_scale || 1,
+            min_wholesale: product_variant.min_wholesale || 1,
+            sku: product_variant.sku,
+            status: product_variant.status,
+            stock: product_variant.stock || 0,
+          };
+        }),
+      };
+
+      client.mutate({
+        mutation: ADD_PRODUCT,
+        variables,
+      })
+        .then((res) => {
+          handleUploadImage(res.data?.insert_products?.returning?.[0].id);
+        })
+        .catch(() => {
+          showError('Gagal Membuat Produk 🤥');
+          setLoading(false);
+        });
+    }
   };
 
   const handleDeleteFiles = () => {
@@ -138,14 +254,14 @@ const AddProduct = () => {
             Varian Produk
           </Title>
 
-          {/* <AddProductVariant form={form} /> */}
+          <AddProductVariant form={form} />
         </Paper>
         <Flex justify="end" align="center">
           <Group position="right" mt="md">
-            <Button variant="subtle" onClick={() => handleSubmit(false)}>
+            <Button variant="subtle" onClick={handleSubmit}>
               Simpan dan Tambah Baru
             </Button>
-            <Button onClick={() => handleSubmit(true)}>Tambahkan Produk</Button>
+            <Button onClick={handleSubmit}>Tambahkan Produk</Button>
           </Group>
         </Flex>
       </Box>

@@ -38,3 +38,9 @@ export interface ProductsCardProps {
   variants?: VariantInterface[] | []
   productVariants?: TableProductsVariants[] | undefined
 }
+
+export interface VARIANTS_TYPE {
+  value: string;
+  label: string;
+  disabled?: boolean;
+}
