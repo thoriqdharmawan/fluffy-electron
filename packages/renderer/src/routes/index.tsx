@@ -1,16 +1,17 @@
-
-import React from 'react'
+import React from "react";
 import { createHashRouter } from "react-router-dom";
-import MainLayout from '../layouts/MainLayout';
 
-const Homepage = React.lazy(() => import("/@/pages/homepage/Homepage"))
-const Transactions = React.lazy(() => import("/@/pages/transactions/Transactions"))
-const Attendances = React.lazy(() => import("/@/pages/attendances"))
-const Wallets = React.lazy(() => import("/@/pages/wallets"))
-const Login = React.lazy(() => import("/@/pages/login"))
-const ProductsPage = React.lazy(() => import("/@/pages/products"))
-const PrintPage = React.lazy(() => import("/@/pages/print"))
-const SettingPage = React.lazy(() => import("/@/pages/setting"))
+import MainLayout from "../layouts/MainLayout";
+
+const Homepage = React.lazy(() => import("/@/pages/homepage/Homepage"));
+const Transactions = React.lazy(() => import("/@/pages/transactions/Transactions"));
+const Attendances = React.lazy(() => import("/@/pages/attendances"));
+const Wallets = React.lazy(() => import("/@/pages/wallets"));
+const Login = React.lazy(() => import("/@/pages/login"));
+const ProductsPage = React.lazy(() => import("/@/pages/products"));
+const AddProductPage = React.lazy(() => import("/@/pages/add-product"));
+const PrintPage = React.lazy(() => import("/@/pages/print"));
+const SettingPage = React.lazy(() => import("/@/pages/setting"));
 
 const ROUTER = createHashRouter([
   {
@@ -18,34 +19,38 @@ const ROUTER = createHashRouter([
     element: <MainLayout />,
     children: [
       {
-        path: '',
+        path: "",
         element: <Homepage />,
       },
       {
-        path: 'transactions',
+        path: "transactions",
         element: <Transactions />,
       },
       {
-        path: 'attendances',
+        path: "attendances",
         element: <Attendances />,
       },
       {
-        path: 'wallets',
+        path: "wallets",
         element: <Wallets />,
       },
       {
-        path: 'print',
+        path: "print",
         element: <PrintPage />,
       },
       {
-        path: 'products',
+        path: "products",
         element: <ProductsPage />,
       },
       {
-        path: 'setting',
+        path: "add-product",
+        element: <AddProductPage />,
+      },
+      {
+        path: "setting",
         element: <SettingPage />,
       },
-    ]
+    ],
   },
   {
     path: "/login",
@@ -53,4 +58,4 @@ const ROUTER = createHashRouter([
   },
 ]);
 
-export default ROUTER
+export default ROUTER;
