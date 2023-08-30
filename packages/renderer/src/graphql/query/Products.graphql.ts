@@ -1,8 +1,31 @@
 import { gql } from "@apollo/client";
 
 export const GET_LIST_PRODUCTS = gql`
-  query GetListProduct($where: products_bool_exp!, $limit: Int, $offset: Int) {
+  query GetListProduct($where: products_bool_exp!, $limit: Int, $offset: Int, $companyId: uuid) {
     total: products_aggregate(where: $where) {
+      aggregate {
+        count
+      }
+    }
+    total_active: products_aggregate(
+      where: { status: { _eq: "ACTIVE" }, company: { id: { _eq: $companyId } } }
+    ) {
+      aggregate {
+        count
+      }
+    }
+
+    total_opname: products_aggregate(
+      where: { status: { _eq: "OPNAME" }, company: { id: { _eq: $companyId } } }
+    ) {
+      aggregate {
+        count
+      }
+    }
+
+    total_waiting: products_aggregate(
+      where: { status: { _eq: "WAITING_FOR_APPROVAL" }, company: { id: { _eq: $companyId } } }
+    ) {
       aggregate {
         count
       }

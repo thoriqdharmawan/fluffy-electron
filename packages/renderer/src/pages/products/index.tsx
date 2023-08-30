@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Box, Group, Pagination, Paper } from "@mantine/core";
+import { Badge, Box, Group, Pagination, Paper, Tabs } from "@mantine/core";
 import { useQuery } from "@apollo/client";
 import { useDebouncedValue } from "@mantine/hooks";
 
@@ -29,6 +29,11 @@ const EMPTY_SEARCH = {
     'Maaf, produk yang Anda cari tidak ditemukan. Silakan periksa kembali kata kunci pencarian Anda atau cobalah kata kunci lain.',
 };
 
+type TotalDatas = {
+  active: number;
+  opname: number;
+  waiting: number;
+};
 
 export default function index() {
   const { value } = useGlobal()
@@ -36,10 +41,16 @@ export default function index() {
 
   const companyId = value?.selectedCompany || user.companyId
 
+  const [productType, setProductType] = useState<string>(PRODUCT_STATUS.ACTIVE);
   const [page, setPage] = useState<number>(1)
   const [search, setSearch] = useState<string>('')
   const [debounce] = useDebouncedValue(search, 1000);
-
+  const [totalDatas, setTotalDatas] = useState<TotalDatas>({
+    active: 0,
+    opname: 0,
+    waiting: 0,
+  });
+  
   const { data, loading, error } = useQuery(GET_LIST_PRODUCTS, {
     client: client,
     skip: !companyId,
@@ -47,9 +58,10 @@ export default function index() {
     variables: {
       limit: LIMIT,
       offset: (page - 1) * LIMIT,
+      companyId: companyId,
       where: {
         _and: {
-          status: { _eq: PRODUCT_STATUS.ACTIVE },
+          status: { _eq: productType },
           company: { id: { _eq: companyId } },
           _or: debounce ? [
             { product_variants: { sku: { _eq: debounce } } },
@@ -57,14 +69,22 @@ export default function index() {
           ] : undefined,
         }
       },
-    }
+    },
+    onCompleted: ({ total_active, total_opname, total_waiting }) => {
+      setTotalDatas((prev) => ({
+        ...prev,
+        active: total_active.aggregate.count,
+        opname: total_opname.aggregate.count,
+        waiting: total_waiting.aggregate.count,
+      }));
+    },
   })
 
   if (error) {
     console.error(error)
   }
 
-  useEffect(() => setPage(1), [search])
+  useEffect(() => setPage(1), [search, productType]);
 
   const loadingData = !companyId || loading;
   const totalPage = Math.ceil((data?.total.aggregate.count || 0) / LIMIT);
@@ -77,6 +97,24 @@ export default function index() {
       />
 
       <SearchBar onChange={(e) => setSearch(e.target.value)} placeholder="Cari Produk" mb="24px" />
+
+      <Tabs
+        value={productType}
+        onTabChange={(v) => setProductType(v || PRODUCT_STATUS.ACTIVE)}
+        mb="lg"
+      >
+        <Tabs.List>
+          <Tabs.Tab value={PRODUCT_STATUS.ACTIVE}>
+            Aktif <Badge>{totalDatas.active}</Badge>
+          </Tabs.Tab>
+          <Tabs.Tab value={PRODUCT_STATUS.OPNAME}>
+            Opname <Badge>{totalDatas.opname}</Badge>
+          </Tabs.Tab>
+          <Tabs.Tab value={PRODUCT_STATUS.WAITING_FOR_APPROVAL}>
+            Menunggu <Badge>{totalDatas.waiting}</Badge>
+          </Tabs.Tab>
+        </Tabs.List>
+      </Tabs>
 
       <Paper shadow="md" radius="md" p="md" mx="auto" mt="xl">
         <Header />

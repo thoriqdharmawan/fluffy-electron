@@ -1,39 +1,42 @@
-import { Navbar as Nav, Stack, Tooltip, UnstyledButton, createStyles } from '@mantine/core';
-import { IconHome2, IconHistory, IconPrinter, IconPackage } from '@tabler/icons';
-import { Link, useLocation } from 'react-router-dom';
-import { ColorSchemeToggle } from '../color-scheme-toggle';
-import { UserLogin } from '../user-login';
+import { Link, useLocation } from "react-router-dom";
 
-const useStyles = createStyles((theme) => ({
+import { Navbar as Nav, Stack, Tooltip, UnstyledButton, createStyles } from "@mantine/core";
+import { IconHome2, IconHistory, IconPrinter, IconPackage, IconTransferIn } from "@tabler/icons";
+
+import { ColorSchemeToggle } from "../color-scheme-toggle";
+import { UserLogin } from "../user-login";
+
+const useStyles = createStyles(theme => ({
   link: {
-    width: 50,
-    height: 50,
-    borderRadius: theme.radius.md,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    color: theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.colors.gray[7],
+    "width": 50,
+    "height": 50,
+    "borderRadius": theme.radius.md,
+    "display": "flex",
+    "alignItems": "center",
+    "justifyContent": "center",
+    "color": theme.colorScheme === "dark" ? theme.colors.dark[0] : theme.colors.gray[7],
 
-    '&:hover': {
-      backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[0],
+    "&:hover": {
+      backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[5] : theme.colors.gray[0],
     },
   },
 
   active: {
-    '&, &:hover': {
-      backgroundColor: theme.fn.variant({ variant: 'light', color: theme.primaryColor }).background,
-      color: theme.fn.variant({ variant: 'light', color: theme.primaryColor }).color,
+    "&, &:hover": {
+      backgroundColor: theme.fn.variant({ variant: "light", color: theme.primaryColor }).background,
+      color: theme.fn.variant({ variant: "light", color: theme.primaryColor }).color,
     },
   },
 }));
 
 const data = [
-  { icon: IconHome2, label: 'Home Page', href: '/' },
-  { icon: IconHistory, label: 'Riwayat Transaksi', href: '/transactions' },
-  { icon: IconPackage, label: 'Daftar Produk', href: '/products' },
+  { icon: IconHome2, label: "Home Page", href: "/" },
+  { icon: IconHistory, label: "Riwayat Transaksi", href: "/transactions" },
+  { icon: IconPackage, label: "Daftar Produk", href: "/products" },
+  { icon: IconTransferIn, label: "Tambah Produk", href: "/add-product" },
   // { icon: IconAlarm, label: 'Kehadiran', href: '/attendances' },
   // { icon: IconWallet, label: 'Dompet', href: '/wallets' },
-  { icon: IconPrinter, label: 'Cetak Stuk', href: '/print' },
+  { icon: IconPrinter, label: "Cetak Stuk", href: "/print" },
   // { icon: IconCash, label: 'Pendapatan', href: '/incomes' },
 ];
 
@@ -42,7 +45,7 @@ export default function Navbar() {
   const { classes, cx } = useStyles();
 
   const menus = data.map((item, index) => {
-    const url = `/${location.pathname.split('/')[1]}`;
+    const url = `/${location.pathname.split("/")[1]}`;
     const isActive = url === item.href;
 
     return (
@@ -65,7 +68,7 @@ export default function Navbar() {
           {menus}
         </Stack>
       </Nav.Section>
-      <Nav.Section sx={{display: 'flex', gap: 12, flexDirection: 'column'}}>
+      <Nav.Section sx={{ display: "flex", gap: 12, flexDirection: "column" }}>
         <ColorSchemeToggle />
         <UserLogin />
       </Nav.Section>
